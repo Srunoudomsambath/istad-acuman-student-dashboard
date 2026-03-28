@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
@@ -6,6 +6,7 @@ import {
   Award,
   Bot,
   BookOpen,
+  CalendarRange,
   CreditCard,
   GraduationCap,
   Settings,
@@ -110,8 +111,18 @@ const studentData = {
       icon: BookOpen,
     },
     {
+      title: "Schedule",
+      url: "/student/schedule",
+      icon: CalendarRange,
+    },
+    {
       title: "Achievements",
       url: "/student/achievements",
+      icon: Award,
+    },
+    {
+      title: "Certificates",
+      url: "/student/certificates",
       icon: Award,
     },
     {

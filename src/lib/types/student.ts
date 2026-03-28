@@ -36,6 +36,17 @@ export type Certificate = {
   description: string;
 };
 
+export type CertificateDetail = Certificate & {
+  certificateId: string;
+  certificateType: string;
+  studentName: string;
+  platformName: string;
+  instructorName: string;
+  courseCode: string;
+  courseDescription: string;
+  backgroundImage: string;
+};
+
 export type Achievement = {
   uuid: string;
   code: string;
@@ -99,7 +110,7 @@ export type Scholar = {
   payments: PaymentRecord[];
   year: string;
   generation: string;
-  major:string;
+  major: string;
 };
 
 export type StudentNotification = {
@@ -110,8 +121,9 @@ export type StudentNotification = {
   category: string;
   unread: boolean;
 };
+
 export type PaymentRecordExtended = PaymentRecord & {
-  amountNum: number; // numeric value for calculations
+  amountNum: number;
 };
 
 export type UpcomingPayment = {
@@ -119,5 +131,5 @@ export type UpcomingPayment = {
   label: string;
   dueDate: string;
   amount: number;
-  daysLeft: number; // days remaining until due date
+  daysLeft: number;
 };

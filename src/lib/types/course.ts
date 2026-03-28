@@ -27,4 +27,5 @@ export type StudentCourse = {
   summary: string;
   roster: string[];
   curriculum: CourseCurriculumItem[];
+  status?:string
 };

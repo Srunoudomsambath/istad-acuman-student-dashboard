@@ -7,12 +7,10 @@
   Download,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { studentProfile } from "@/lib/mock/student";
 
 type CoursePayment = {
   title: string;
@@ -79,38 +77,9 @@ export default function PaymentsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Payment Progress */}
       <Card className="border-border/60 bg-card/80 shadow-sm">
         <CardContent className="space-y-6 p-6">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="flex items-start gap-4">
-              <Avatar className="h-20 w-20 border">
-                <AvatarFallback className="bg-primary/10 text-2xl font-semibold text-primary">
-                  {studentProfile.englishName
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")
-                    .slice(0, 2)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-semibold tracking-tight">
-                    {studentProfile.englishName}
-                  </h2>
-                  <Badge className="rounded-full bg-emerald-500 text-white hover:bg-emerald-500">
-                    active
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {studentProfile.accountName}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {studentProfile.major ?? "Full Stack Development"}
-                </p>
-              </div>
-            </div>
-          </div>
-
           <div className="rounded-2xl bg-muted/20 p-5">
             <div className="mb-3 flex items-center justify-between">
               <p className="font-medium">Payment Progress</p>
@@ -141,6 +110,7 @@ export default function PaymentsPage() {
         </CardContent>
       </Card>
 
+      {/* My Courses */}
       <Card className="border-border/60 bg-card/80 shadow-sm">
         <CardHeader className="border-b bg-muted/20">
           <CardTitle className="flex items-center gap-2">
@@ -160,11 +130,11 @@ export default function PaymentsPage() {
                   <p className="text-sm text-muted-foreground">{item.semester}</p>
                 </div>
                 <p className="text-sm">
-                  Paid: {" "}
+                  Paid:{" "}
                   <span className="font-medium text-emerald-600">
                     ${item.paid.toLocaleString()}.00
                   </span>{" "}
-                  Remaining: {" "}
+                  Remaining:{" "}
                   <span className="font-medium text-rose-500">
                     ${item.remaining.toLocaleString()}.00
                   </span>
@@ -192,6 +162,7 @@ export default function PaymentsPage() {
         </CardContent>
       </Card>
 
+      {/* Payment History */}
       <Card className="border-border/60 bg-card/80 shadow-sm">
         <CardHeader className="border-b bg-muted/20">
           <CardTitle className="flex items-center gap-2">
@@ -239,4 +210,3 @@ export default function PaymentsPage() {
     </div>
   );
 }
-
