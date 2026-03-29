@@ -1,14 +1,20 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+  ActivitySquare,
   ArrowLeft,
+  Award,
   BookOpen,
+  BookOpenCheck,
+  Briefcase,
+  Building2,
   CalendarDays,
   ChevronRight,
   FileText,
   GraduationCap,
   Layers3,
   PlayCircle,
+  TrendingUp,
   Users,
 } from "lucide-react";
 
@@ -132,107 +138,128 @@ export default function CourseDetailPage({ params }: CoursePageProps) {
         </Badge>
       </div>
 
-      <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/80 shadow-sm">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.16),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.12),transparent_32%)]" />
-        <div className="relative grid gap-6 p-6 lg:grid-cols-[1.15fr_0.85fr] lg:p-8">
-          <div className="space-y-5">
-            <div className="flex flex-wrap gap-2">
-              <Badge className="rounded-full px-3 py-1">{course.level}</Badge>
-              <Badge variant="secondary" className="rounded-full px-3 py-1">
-                Year {course.year} - Semester {course.semester}
-              </Badge>
-              <Badge variant="outline" className="rounded-full px-3 py-1">
-                {course.code}
-              </Badge>
-            </div>
+     <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
 
-            <div className="space-y-3">
-              <p className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-muted-foreground">
-                <BookOpen className="size-3.5" />
-                Course detail
-              </p>
-              <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                {course.title}
-              </h1>
-              <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-                {course.description}
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              <StatPill label="Credits" value={`${course.credit} total`} />
-              <StatPill label="Instructor" value={course.instructor} />
-              <StatPill label="Progress" value={`${completionPercent}% ${progressLabel}`} />
-            </div>
-
-            <div className="space-y-2 rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-                    Semester progress
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Keep momentum steady and finish the remaining work strong.
-                  </p>
-                </div>
-                <p className="text-2xl font-semibold tracking-tight text-foreground">
-                  {completionPercent}%
-                </p>
-              </div>
-              <Progress value={completionPercent} />
-            </div>
+        <div>
+          {/* ── Top meta bar ── */}
+          <div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/40 px-6 py-3">
+            <Badge className="rounded-full px-3 py-0.5 text-xs">{course.level}</Badge>
+            <Badge variant="secondary" className="rounded-full px-3 py-0.5 text-xs">
+              Year {course.year} · Semester {course.semester}
+            </Badge>
+            <Badge variant="outline" className="rounded-full px-3 py-0.5 font-mono text-xs tracking-wider">
+              {course.code}
+            </Badge>
+            <span className="ml-auto hidden items-center gap-1.5 text-xs text-muted-foreground sm:flex">
+              <BookOpen className="size-3.5" />
+              Course Detail
+            </span>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            <Card className="border-border/60 bg-background/75 shadow-sm">
-              <CardContent className="space-y-2 p-4">
-                <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-                  <span>Instructor</span>
-                  <GraduationCap className="size-4" />
-                </div>
-                <p className="text-xl font-semibold text-foreground">
-                  {course.instructor}
+          {/* ── Main body ── */}
+          <div className="grid gap-0 lg:grid-cols-[1fr_320px]">
+            {/* Left — Title + Stats + Progress */}
+            <div className="space-y-6 border-b border-border p-6 lg:border-b-0 lg:border-r lg:p-8">
+              <div className="space-y-2">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  {course.title}
+                </h1>
+                <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  {course.description}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  {course.instructorRole}
-                </p>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="border-border/60 bg-background/75 shadow-sm">
-              <CardContent className="space-y-2 p-4">
-                <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-                  <span>Class start</span>
-                  <CalendarDays className="size-4" />
-                </div>
-                <p className="text-xl font-semibold text-foreground">
-                  {course.classStart}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {course.studentsJoined} students joined
-                </p>
-              </CardContent>
-            </Card>
+              {/* Stat pills row */}
+              <div className="flex flex-wrap gap-3">
+                {[
+                  { icon: <Award className="size-3.5" />, label: "Credits", value: `${course.credit} total` },
+                  { icon: <GraduationCap className="size-3.5" />, label: "Theory", value: course.theory },
+              { icon: <Briefcase className="size-3.5" />, label: "Practice", value: course.practice },
+              { icon: <Building2 className="size-3.5" />, label: "Internship", value: course.internship },
 
-            <Card className="border-border/60 bg-background/75 shadow-sm sm:col-span-2 lg:col-span-1 xl:col-span-2">
-              <CardContent className="space-y-2 p-4">
-                <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-                  <span>Enrollment snapshot</span>
-                  <Users className="size-4" />
+                ].map(({ icon, label, value }) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-2.5 rounded-lg border border-border bg-muted/30 px-3.5 py-2.5"
+                  >
+                    <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                      {icon}
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+                      <p className="text-sm font-semibold leading-tight text-foreground">{value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Progress block */}
+              <div className="rounded-lg border border-border bg-muted/20 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Semester Progress</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">Keep momentum and finish the remaining work strong.</p>
+                  </div>
+                  <span className="text-2xl font-bold tabular-nums text-foreground">{completionPercent}%</span>
                 </div>
-                <p className="text-xl font-semibold text-foreground">
-                  {course.studentsJoined} active learners
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {course.roster.length} names currently visible in the mock roster.
-                </p>
-              </CardContent>
-            </Card>
+                <Progress value={completionPercent} className="h-1.5" />
+                <p className="mt-2 text-right text-xs font-medium text-muted-foreground">{progressLabel}</p>
+              </div>
+            </div>
+
+            {/* Right — Info cards */}
+            <div className="flex flex-col divide-y divide-border">
+              <div className="flex items-start gap-3.5 p-5">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted">
+                  <GraduationCap className="size-4 text-foreground" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Instructor</p>
+                  <p className="mt-0.5 text-sm font-semibold text-foreground">{course.instructor}</p>
+                  <p className="text-xs text-muted-foreground">{course.instructorRole}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 p-5">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted">
+                  <CalendarDays className="size-4 text-foreground" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Class Start</p>
+                  <p className="mt-0.5 text-sm font-semibold text-foreground">{course.classStart}</p>
+                  <p className="text-xs text-muted-foreground">{course.studentsJoined} students joined</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 p-5">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted">
+                  <Users className="size-4 text-foreground" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Enrollment</p>
+                  <p className="mt-0.5 text-sm font-semibold text-foreground">{course.studentsJoined} active learners</p>
+                  <p className="text-xs text-muted-foreground">{course.roster.length} names in roster</p>
+                </div>
+              </div>
+
+           <div className="flex items-start gap-3.5 p-5">
+  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted">
+    <ActivitySquare className="size-4 text-foreground" />
+  </div>
+  <div>
+    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Status</p>
+    <p className="mt-0.5 text-sm font-semibold text-foreground capitalize">{course.status ?? "Active"}</p>
+    <p className="text-xs text-muted-foreground">Current course status</p>
+  </div>
+</div>
+             
+
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-3 ">
         <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
           <CardHeader className="border-b border-border/60 bg-muted/20">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -285,68 +312,7 @@ export default function CourseDetailPage({ params }: CoursePageProps) {
           </CardContent>
         </Card>
 
-        <div className="space-y-3">
-          <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-            <CardHeader className="border-b border-border/60 bg-muted/20">
-              <CardTitle className="text-xl">Course details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 p-5">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-                    Theory
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-foreground">
-                    {course.theory} credits
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-                    Practice
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-foreground">
-                    {course.practice} credits
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-border/60 bg-background/70 p-4 sm:col-span-2">
-                  <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-                    Internship
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-foreground">
-                    {course.internship}
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/60 bg-primary/5 p-4">
-                <p className="text-sm font-medium text-foreground">Summary</p>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  {course.summary}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-            <CardHeader className="border-b border-border/60 bg-muted/20">
-              <CardTitle className="text-xl">Roster preview</CardTitle>
-            </CardHeader>
-            <CardContent className="p-5">
-              <div className="flex flex-wrap gap-2">
-                {course.roster.map((student) => (
-                  <Badge key={student} variant="secondary" className="rounded-full px-3 py-1">
-                    {student}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter className="border-t border-border/60 bg-background/40 p-5">
-              <Button className="w-full gap-2">
-                Download course outline
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
+    
       </div>
     </div>
   );

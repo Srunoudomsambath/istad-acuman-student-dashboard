@@ -40,7 +40,7 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
   // ✅ DEVELOPMENT MODE: skip all auth
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "development") {
     return NextResponse.next();
   }
  

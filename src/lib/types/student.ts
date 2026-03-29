@@ -45,6 +45,16 @@ export type CertificateDetail = Certificate & {
   courseCode: string;
   courseDescription: string;
   backgroundImage: string;
+  createdBy?: string;
+  id?: number;
+  openingProgramName?: string;
+  fileName?: string;
+  tempCertificateUrl?: string;
+  certificateUrl?: string;
+  isVerified?: boolean;
+  verifiedAt?: string;
+  isDisabled?: boolean;
+  isDeleted?: boolean;
 };
 
 export type Achievement = {
@@ -133,3 +143,5 @@ export type UpcomingPayment = {
   amount: number;
   daysLeft: number;
 };
+
+
