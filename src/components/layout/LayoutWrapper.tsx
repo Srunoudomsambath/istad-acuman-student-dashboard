@@ -22,7 +22,7 @@ export default function LayoutWrapper({
       {noLayout.includes(pathname) ? (
         children
       ) : (
-        <SidebarProvider defaultOpen={preference.sidebar?.parent?.defaultOpen}>
+        <SidebarProvider defaultOpen={true}>
           <AppSidebar />
           <main className="h-screen overflow-y-hidden w-full">
             <SiteHeader />

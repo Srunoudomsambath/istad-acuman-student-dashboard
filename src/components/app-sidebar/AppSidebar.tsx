@@ -266,7 +266,7 @@ function StudentSidebar() {
               {group.items.map((item) => {
                 const hasSubmenu = !!item.items?.length;
                 const Icon = item.icon;
-                const defaultOpen = activeRoute === item.title;
+                const defaultOpen = item.title === "Courses" || item.title === "Records" || activeRoute === item.title;
 
                 if (hasSubmenu) {
                   return (
