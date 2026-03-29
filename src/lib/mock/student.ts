@@ -32,7 +32,7 @@ export const studentProfile: Scholar = {
   status: "ACTIVE",
   bio: "A passionate software engineering student who loves building impactful products.",
   quote: "Spring is not just a framework, it's the backbone of resilient microservices.",
-  avatar: "",
+  avatar: "/image/teacher.png",
   isPublic: true,
   isAbroad: false,
   isEmployed: true,
