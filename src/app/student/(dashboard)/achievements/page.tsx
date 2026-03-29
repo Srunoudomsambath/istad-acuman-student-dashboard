@@ -170,49 +170,28 @@ export default function AchievementsPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-        <CardContent className="grid gap-6 p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.28em] text-muted-foreground">
-              <Sparkles className="size-3.5" />
-              Project Achievement
-            </div>
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Student project showcase
-            </h1>
-            <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-              This page highlights the projects a student completed during
-              foundation, full stack, data analytics, and IT professional tracks.
-              The layout matches the backend achievement fields, so we can switch
-              to live API data later without changing the screen design.
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-full px-3 py-1">Pre-university</Badge>
-              <Badge variant="secondary" className="rounded-full px-3 py-1">
-                {projects.length} projects
-              </Badge>
-              <Badge variant="outline" className="rounded-full px-3 py-1">
-                {totalPrograms} programs
-              </Badge>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Button asChild size="sm" className="gap-2">
-                <Link href="#project-grid">
-                  <ScrollText className="size-4" />
-                  View projects
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm" className="gap-2">
-                <Link href={`#${featuredProject.uuid}`}>
-                  <Award className="size-4" />
-                  Featured work
-                </Link>
-              </Button>
-            </div>
-          </div>
+       <div className="space-y-6">
+  <div className="space-y-2">
+    {/* Header badge + small description */}
+    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <Badge variant="secondary" className="rounded-full text-[11px] font-semibold">
+        My Achievements
+      </Badge>
+      <span>Track student project completions, skills earned, and milestones</span>
+    </div>
 
-        </CardContent>
-      </Card>
+    {/* Title + description */}
+    <div className="space-y-1">
+      <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+        Achievements
+      </h1>
+      <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+        View all the projects and milestones you have completed during your studies.
+        This overview shows your progress across courses, tracks, and personal projects.
+      </p>
+    </div>
+  </div>
+</div>
 
       <div id="project-grid" className="grid gap-4 md:grid-cols-2">
         {projects.map((project) => (

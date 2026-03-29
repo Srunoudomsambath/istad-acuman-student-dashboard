@@ -1,213 +1,463 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
-import {
-  Award,
-  Bot,
-  BookOpen,
-  CalendarRange,
-  CreditCard,
-  GraduationCap,
-  Settings,
-  User2,
-  UserCheck,
-} from "lucide-react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import type { LucideIcon } from "lucide-react";
+import {
+  BadgeCheck,
+  Bell,
+  BookOpen,
+  ChevronDown,
+  CreditCard,
+  FileBadge2,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  Settings2,
+  User2,
+} from "lucide-react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
-import { NavMain } from "@/components/app-sidebar/NavMain";
-import { NavUser } from "@/components/app-sidebar/NavUser";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { studentProfile } from "@/lib/mock/student";
 
+type NavChild = {
+  title: string;
+  url: string;
+};
+
+type NavItem = {
+  title: string;
+  url?: string;
+  icon: LucideIcon;
+  items?: NavChild[];
+};
+
+type NavGroup = {
+  label?: string;
+  items: NavItem[];
+};
+
 const data = {
+  user: {
+    name: "Tong Bora",
+    email: "tongbora.official@gmail.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
   navMain: [
     {
       title: "Overview",
-      url: "/",
-      icon: Bot,
-      isActive: true,
-    },
-    {
-      title: "Enrollment",
-      url: "/enrollment",
-      icon: UserCheck,
-      isActive: true,
+      url: "/test",
+      icon: LayoutDashboard,
     },
     {
       title: "Program",
-      url: "",
+      url: "/test",
       icon: BookOpen,
+      isActive: true,
       items: [
         {
-          title: "Master Program",
-          url: "/master-program",
+          title: "Our Program",
+          url: "/test",
         },
         {
           title: "Opening Program",
-          url: "/opening-program",
+          url: "/test",
         },
       ],
     },
     {
       title: "Scholar",
-      url: "",
+      url: "#",
       icon: GraduationCap,
       items: [
         {
-          title: "Statistic",
-          url: "/statistic",
+          title: "Statistics",
+          url: "/test",
         },
         {
-          title: "Achievements",
-          url: "/achievement",
+          title: "Achievement",
+          url: "/test",
         },
         {
           title: "Verification",
-          url: "/verification",
+          url: "/test",
         },
       ],
     },
     {
+      title: "Transcript",
+      url: "/test",
+      icon: FileBadge2,
+    },
+    {
+      title: "Enrollment",
+      url: "/test",
+      icon: User2,
+    },
+    {
       title: "Certificate",
-      url: "/certificate",
-      icon: Award,
+      url: "/test",
+      icon: BadgeCheck,
     },
     {
       title: "User",
-      url: "/user",
+      url: "/test",
       icon: User2,
     },
     {
       title: "Settings",
-      url: "/setting",
-      icon: Settings,
+      url: "/test",
+      icon: Settings2,
     },
   ],
 };
 
-const studentData = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/student",
-      icon: Bot,
-    },
-    {
-      title: "Courses",
-      url: "/student/courses",
-      icon: BookOpen,
-    },
-    {
-      title: "Schedule",
-      url: "/student/schedule",
-      icon: CalendarRange,
-    },
-    {
-      title: "Achievements",
-      url: "/student/achievements",
-      icon: Award,
-    },
-    {
-      title: "Certificates",
-      url: "/student/certificates",
-      icon: Award,
-    },
-    {
-      title: "Payments",
-      url: "/student/payments",
-      icon: CreditCard,
-    },
-    {
-      title: "Profile",
-      url: "/student/profile",
-      icon: User2,
-    },
-    {
-      title: "Settings",
-      url: "/student/settings",
-      icon: Settings,
-    },
-  ],
-};
+const studentNavGroups: NavGroup[] = [
+  {
+    label: "Main",
+    items: [
+      {
+        title: "Dashboard",
+        url: "/student",
+        icon: LayoutDashboard,
+      },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      {
+        title: "Courses",
+        icon: BookOpen,
+        items: [
+          {
+            title: "My Courses",
+            url: "/student/courses",
+          },
+          {
+            title: "Schedule",
+            url: "/student/schedule",
+          },
+        ],
+      },
+      {
+        title: "Records",
+        icon: GraduationCap,
+        items: [
+          {
+            title: "Achievements",
+            url: "/student/achievements",
+          },
+          {
+            title: "Certificates",
+            url: "/student/certificates",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Finance",
+    items: [
+      {
+        title: "Payments",
+        url: "/student/payments",
+        icon: CreditCard,
+      },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      {
+        title: "Profile",
+        url: "/student/profile",
+        icon: User2,
+      },
+      {
+        title: "Settings",
+        url: "/student/settings",
+        icon: Settings2,
+      },
+    ],
+  },
+];
+
+function findActiveRoute(pathname: string) {
+  for (const group of studentNavGroups) {
+    for (const item of group.items) {
+      if (item.items?.some((subItem) => subItem.url === pathname)) {
+        return item.title;
+      }
+    }
+  }
+
+  return null;
+}
+
+function StudentSidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { isMobile } = useSidebar();
+  const activeRoute = findActiveRoute(pathname);
+
+  return (
+    <Sidebar collapsible="icon" className="z-50">
+      <SidebarHeader className="px-4 pt-6">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="ISTAD Student" className="gap-3">
+              <Link href="/student">
+                <Image
+                  src="/logo/exSTAD.png"
+                  alt="ISTAD"
+                  width={24}
+                  height={24}
+                  className="size-6"
+                />
+                <span className="font-semibold">ISTAD Student</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent className="mt-4 overflow-x-hidden">
+        {studentNavGroups.map((group) => (
+          <SidebarGroup key={group.label || "ungrouped"} className="py-0">
+            {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
+            <SidebarMenu>
+              {group.items.map((item) => {
+                const hasSubmenu = !!item.items?.length;
+                const Icon = item.icon;
+                const defaultOpen = activeRoute === item.title;
+
+                if (hasSubmenu) {
+                  return (
+                    <Collapsible
+                      key={item.title}
+                      asChild
+                      defaultOpen={defaultOpen}
+                      className="group/collapsible"
+                    >
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton
+                            tooltip={item.title}
+                            className="rounded-2xl transition-colors duration-300 ease-out data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                          >
+                            <Icon className="mr-2" />
+                            <span>{item.title}</span>
+                            <ChevronDown className="ml-auto size-4 transition-transform duration-500 ease-out group-data-[state=open]/collapsible:rotate-180" />
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-[accordion-up_400ms_cubic-bezier(0.16,1,0.3,1)] data-[state=open]:animate-[accordion-down_400ms_cubic-bezier(0.16,1,0.3,1)]">
+                          <SidebarMenuSub className="mt-1">
+                            {item.items?.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={pathname === subItem.url}
+                                >
+                                  <Link href={subItem.url}>
+                                    <span>{subItem.title}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                }
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.title}
+                      isActive={pathname === item.url}
+                      className="rounded-2xl transition-colors duration-300 ease-out"
+                    >
+                      <Link href={item.url || "/student"}>
+                        <Icon className="mr-2" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+
+      <SidebarFooter className="px-4 pb-4">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="rounded-2xl transition-colors duration-300 ease-out data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage
+                      src={studentProfile.avatar}
+                      alt={studentProfile.englishName}
+                    />
+                    <AvatarFallback className="rounded-lg">
+                      {studentProfile.englishName
+                        .split(" ")
+                        .map((part) => part[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">
+                      {studentProfile.accountName}
+                    </span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {studentProfile.email}
+                    </span>
+                  </div>
+                  <Badge variant="secondary" className="ml-1 rounded-full">
+                    {studentProfile.status}
+                  </Badge>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-56 rounded-lg"
+                side={isMobile ? "bottom" : "right"}
+                align="end"
+                sideOffset={4}
+              >
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="px-1 py-1.5">
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarImage
+                          src={studentProfile.avatar}
+                          alt={studentProfile.englishName}
+                        />
+                        <AvatarFallback className="rounded-lg">
+                          {studentProfile.englishName
+                            .split(" ")
+                            .map((part) => part[0])
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-medium">
+                          {studentProfile.englishName}
+                        </span>
+                        <span className="truncate text-xs text-muted-foreground">
+                          {studentProfile.email}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => router.push("/student/profile")}>
+                    <BadgeCheck className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/student/payments")}>
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    Payments
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/student")}>
+                    <Bell className="mr-2 h-4 w-4" />
+                    Notifications
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}
 
 export default function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const isStudentRoute = pathname?.startsWith("/student");
-  const menuData = isStudentRoute ? studentData : data;
+
+  if (isStudentRoute) {
+    return <StudentSidebar />;
+  }
 
   return (
     <Sidebar className="z-50" collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <Link href={isStudentRoute ? "/student" : "/"}>
-                <span>
-                  <Image
-                    width={20}
-                    height={20}
-                    src="/favicon.ico"
-                    alt="logo"
-                    className="h-8 w-8"
-                  />
-                </span>
-                <span className="text-base font-semibold">
-                  {isStudentRoute ? "ISTAD Student" : "Experimental STAD"}
-                </span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+      <div className="flex h-16 shrink-0 items-center justify-between border-b px-2 ">
+        <Link href="/">
+          <Image
+            src="/logo/exstad.png"
+            alt="Logo"
+            width={50}
+            height={50}
+            className="ml-4"
+          />
+        </Link>
+      </div>
+
       <SidebarContent>
-        <NavMain items={menuData.navMain} />
+        <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        {isStudentRoute ? (
-          <div className="mx-2 rounded-2xl border border-sidebar-border/60 bg-background/50 p-3">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 rounded-lg">
-                <AvatarFallback className="rounded-lg">CC</AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">
-                  {studentProfile.accountName}
-                </p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {studentProfile.email}
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between">
-              <Badge variant="secondary" className="rounded-full">
-                {studentProfile.status}
-              </Badge>
-              <span className="text-xs text-muted-foreground">
-                Public {studentProfile.isPublic ? "on" : "off"}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <NavUser />
-        )}
+        <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

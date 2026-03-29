@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, GraduationCap, Users } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -10,9 +11,73 @@ import type { StudentCourse } from "@/lib/types/course";
 
 type CourseCardProps = {
   course: StudentCourse;
+  layout?: "card" | "list";
 };
 
-export function CourseCard({ course }: CourseCardProps) {
+export function CourseCard({ course, layout = "card" }: CourseCardProps) {
+  if (layout === "list") {
+    return (
+      <Card className="group overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:shadow-md">
+        <CardContent className="flex items-center gap-4 p-4">
+          {/* Logo */}
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary/10">
+            <Image
+              src={course.logo}
+              alt={`${course.title} logo`}
+              width={32}
+              height={32}
+              className="object-contain"
+            />
+          </div>
+
+          {/* Main info */}
+          <div className="min-w-0 flex-1 space-y-1">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <h3 className="text-sm font-semibold tracking-tight truncate">
+                {course.title}
+              </h3>
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                {course.level}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <GraduationCap className="size-3 shrink-0" />
+                {course.instructor}
+              </span>
+              <span className="flex items-center gap-1">
+                <CalendarDays className="size-3 shrink-0" />
+                {course.credit} credits
+              </span>
+              <span className="flex items-center gap-1">
+                <Users className="size-3 shrink-0" />
+                {course.studentsJoined} students
+              </span>
+            </div>
+          </div>
+
+          {/* Progress */}
+          <div className="hidden w-32 shrink-0 space-y-1 sm:block">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Progress</span>
+              <span className="font-medium">{course.progress}%</span>
+            </div>
+            <Progress value={course.progress} className="h-1.5" />
+          </div>
+
+          {/* Action */}
+          <Button asChild variant="ghost" size="sm" className="shrink-0 gap-1 text-xs">
+            <Link href={`/student/courses/${course.slug}`}>
+              View
+              <ArrowRight className="size-3" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // ── Default card layout ──────────────────────────────────────────────────
   return (
     <Card className="group overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <CardContent className="space-y-5 p-5">

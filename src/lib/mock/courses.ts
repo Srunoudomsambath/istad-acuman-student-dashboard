@@ -23,6 +23,7 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Build responsive interfaces and complete a polished mini project.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    status:"nothing",
     curriculum: [
       {
         uuid: "wd-slide",
@@ -72,6 +73,7 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Model data with confidence and write maintainable SQL queries.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
     curriculum: [
       {
         uuid: "db-slide",
@@ -121,6 +123,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Prepare for production UI workflows with reusable components.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "react-slide",
@@ -170,6 +174,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Build responsive interfaces and complete a polished mini project.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "wd-slide",
@@ -219,6 +225,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Model data with confidence and write maintainable SQL queries.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "db-slide",
@@ -268,6 +276,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Prepare for production UI workflows with reusable components.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "react-slide",
@@ -317,6 +327,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Build responsive interfaces and complete a polished mini project.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "wd-slide",
@@ -366,6 +378,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Model data with confidence and write maintainable SQL queries.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "db-slide",
@@ -415,6 +429,8 @@ export const studentCourses: StudentCourse[] = [
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Prepare for production UI workflows with reusable components.",
     roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+        status:"nothing",
+
     curriculum: [
       {
         uuid: "react-slide",

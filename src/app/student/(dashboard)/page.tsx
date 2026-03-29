@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   Award,
@@ -12,7 +12,7 @@ import { CourseProgressCard } from "@/components/dashboard/CourseProgressCard";
 import { NotificationList } from "@/components/dashboard/notification-list";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { studentCourses } from "@/lib/mock/courses";
 import {
   studentAchievements,
@@ -21,6 +21,9 @@ import {
 } from "@/lib/mock/student";
 import { studentNotifications } from "@/lib/mock/notifications";
 import { formatPhnomPenhDate, getPhnomPenhDate } from "@/lib/phnom-penh-date";
+import { GradeCard } from "@/components/student/grade-summary";
+
+
 
 export default function StudentDashboardPage() {
   const today = getPhnomPenhDate();
@@ -50,6 +53,8 @@ export default function StudentDashboardPage() {
       icon: GraduationCap,
     },
   ];
+
+
 
   return (
     <div className="space-y-4">
@@ -122,8 +127,10 @@ export default function StudentDashboardPage() {
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <CourseProgressCard courses={studentCourses} perPage={2} />
-        <NotificationList notifications={studentNotifications} />
+        {/* <NotificationList notifications={studentNotifications} /> */}
+        <GradeCard/>
       </div>
+      
     </div>
   );
 }

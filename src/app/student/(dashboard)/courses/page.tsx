@@ -16,7 +16,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import type { ReactElement } from "react";
-
+import { cn } from "@/lib/utils"
 import { CourseCard } from "@/components/dashboard/course-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { studentCourses } from "@/lib/mock/courses";
+import { PanelHeader } from "@/components/student/panel-header";
+import { LayoutGrid, List, AlignJustify } from "lucide-react";
 
 type Trend = "up" | "down" | "flat";
 
@@ -53,11 +55,7 @@ type DeadlineItem = {
   done: boolean;
 };
 
-type GradeItem = {
-  subject: string;
-  grade: string;
-  score: number;
-};
+
 
 const STATUS_OPTIONS = ["On Track", "At Risk", "Completed"] as const;
 type Status = (typeof STATUS_OPTIONS)[number];
@@ -108,30 +106,7 @@ function StatCard({
   );
 }
 
-// ─── Panel Header ─────────────────────────────────────────────────────────────
-function PanelHeader({
-  title,
-  description,
-  action,
-}: {
-  title: string;
-  description?: string;
-  action?: ReactElement;
-}) {
-  return (
-    <CardHeader className="border-b border-border/60 bg-muted/20">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1">
-          <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
-          {description && (
-            <p className="text-sm leading-6 text-muted-foreground">{description}</p>
-          )}
-        </div>
-        {action}
-      </div>
-    </CardHeader>
-  );
-}
+
 
 // ─── Attendance Row ───────────────────────────────────────────────────────────
 function AttendanceRow({ subject, attended, total }: AttendanceItem) {
@@ -188,35 +163,22 @@ function DeadlineRow({ title, course, due, done }: DeadlineItem) {
   );
 }
 
-// ─── Grade Row ────────────────────────────────────────────────────────────────
-function GradeRow({ subject, grade, score }: GradeItem) {
-  const color =
-    score >= 85
-      ? "text-emerald-600 dark:text-emerald-400"
-      : score >= 70
-        ? "text-sky-600 dark:text-sky-400"
-        : score >= 50
-          ? "text-amber-600 dark:text-amber-400"
-          : "text-red-500";
-
+// ─── Course Status Badge ──────────────────────────────────────────────────────
+function CourseStatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    "On Track": "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+    "At Risk":  "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+    "Completed": "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
+  };
   return (
-    <div className="flex items-center gap-3 py-2.5">
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium text-foreground">{subject}</p>
-      </div>
-      <div className="flex items-center gap-3">
-        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full bg-current opacity-70 transition-all"
-            style={{ width: `${score}%`, color: "inherit" }}
-          />
-        </div>
-        <span className={`w-6 text-center text-xs font-bold ${color}`}>{grade}</span>
-        <span className="w-8 text-right text-[11px] text-muted-foreground">
-          {score}%
-        </span>
-      </div>
-    </div>
+    <span
+      className={cn(
+        "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium",
+        styles[status] ?? "bg-muted text-muted-foreground"
+      )}
+    >
+      {status}
+    </span>
   );
 }
 
@@ -225,7 +187,7 @@ export default function CoursesPage() {
   const [search, setSearch] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([]);
   const [page, setPage] = useState(1);
-
+const [courseView, setCourseView] = useState<"grid3" | "grid2" | "grid1" | "table">("grid2");
   const toggleStatus = (status: Status) => {
     setSelectedStatuses((prev) =>
       prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]
@@ -261,13 +223,6 @@ export default function CoursesPage() {
     { title: "Quiz 2 Revision", course: "Networking Basics", due: "Mar 22", done: true },
   ];
 
-  const grades: GradeItem[] = [
-    { subject: "Web Development", grade: "A", score: 91 },
-    { subject: "Database Systems", grade: "B+", score: 78 },
-    { subject: "UI/UX Design", grade: "A-", score: 87 },
-    { subject: "Data Structures", grade: "B", score: 72 },
-    { subject: "Networking Basics", grade: "A", score: 90 },
-  ];
 
   const onTrackCourses = studentCourses.filter((c) => c.progress >= 70).length;
   const pendingDeadlines = deadlines.filter((d) => !d.done).length;
@@ -330,7 +285,7 @@ export default function CoursesPage() {
       </div>
 
       {/* ── Attendance + Deadlines ──────────────────────────────────── */}
-      <div className="grid gap-3 lg:grid-cols-2">
+      {/* <div className="grid gap-3 lg:grid-cols-2">
         <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
           <PanelHeader
             title="Attendance overview"
@@ -360,191 +315,242 @@ export default function CoursesPage() {
             ))}
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
-      <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-        <PanelHeader
-          title="Grade summary"
-          action={<span className="text-xs text-muted-foreground">Auto-synced</span>}
-        />
-        <CardContent className="divide-y divide-border/60 px-5">
-          {grades.map((g) => (
-            <GradeRow key={g.subject} {...g} />
-          ))}
-        </CardContent>
-        <CardFooter className="block border-t border-border/60 px-5 py-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Semester GPA</span>
-            <span className="text-sm font-bold text-foreground">3.52 / 4.00</span>
-          </div>
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-            <div className="h-full w-[88%] rounded-full bg-foreground/80" />
-          </div>
-        </CardFooter>
-      </Card>
+ 
 
       {/* ── Courses ─────────────────────────────────────────────────── */}
-      <div className="grid gap-3">
-        <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-          <PanelHeader
-            title={`Enrolled courses (${studentCourses.length})`}
-            description="Open any card to jump into the course detail page."
-            action={
-              <span className="text-xs text-muted-foreground">{onTrackCourses} on track</span>
-            }
-          />
+<div className="grid gap-3">
+  <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
+    <PanelHeader
+      title={`Enrolled courses (${studentCourses.length})`}
+      description="Open any card to jump into the course detail page."
+      action={
+        <span className="text-xs text-muted-foreground">{onTrackCourses} on track</span>
+      }
+    />
+{/* Search & Filter bar */}
+<div className="flex items-center gap-2 border-b border-border/60 px-4 py-3">
+  <div className="relative flex-1">
+    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+    <Input
+      placeholder="Search by course or instructor..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      className="h-8 pl-8 text-sm"
+    />
+  </div>
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button
+        variant={hasActiveFilters ? "default" : "outline"}
+        size="sm"
+        className="h-8 gap-1.5 px-3 text-xs"
+      >
+        <SlidersHorizontal className="h-3.5 w-3.5" />
+        Filter
+        {hasActiveFilters && (
+          <span className="ml-0.5 rounded-full bg-background/20 px-1.5 py-0.5 text-[10px] font-semibold leading-none">
+            {selectedStatuses.length}
+          </span>
+        )}
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end" className="w-44">
+      <DropdownMenuLabel className="text-xs">Status</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      {STATUS_OPTIONS.map((status) => (
+        <DropdownMenuCheckboxItem
+          key={status}
+          checked={selectedStatuses.includes(status)}
+          onCheckedChange={() => toggleStatus(status)}
+          className="text-xs"
+        >
+          {status}
+        </DropdownMenuCheckboxItem>
+      ))}
+      {hasActiveFilters && (
+        <>
+          <DropdownMenuSeparator />
+          <button
+            onClick={() => setSelectedStatuses([])}
+            className="w-full px-2 py-1.5 text-left text-xs text-muted-foreground hover:text-foreground"
+          >
+            Clear filters
+          </button>
+        </>
+      )}
+    </DropdownMenuContent>
+  </DropdownMenu>
 
-          {/* Search & Filter bar */}
-          <div className="flex items-center gap-2 border-b border-border/60 px-4 py-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search by course or instructor..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="h-8 pl-8 text-sm"
-              />
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={hasActiveFilters ? "default" : "outline"}
-                  size="sm"
-                  className="h-8 gap-1.5 px-3 text-xs"
-                >
-                  <SlidersHorizontal className="h-3.5 w-3.5" />
-                  Filter
-                  {hasActiveFilters && (
-                    <span className="ml-0.5 rounded-full bg-background/20 px-1.5 py-0.5 text-[10px] font-semibold leading-none">
-                      {selectedStatuses.length}
-                    </span>
+  {/* ── View toggle ── */}
+  <div className="flex items-center rounded-md border border-border/60">
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn("h-8 w-8 rounded-r-none border-r border-border/60", courseView === "grid3" && "bg-muted")}
+      onClick={() => setCourseView("grid3")}
+      aria-label="3-column grid"
+      title="Grid (3 col)"
+    >
+      <LayoutGrid className="h-3.5 w-3.5" />
+    </Button>
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn("h-8 w-8 rounded-none border-r border-border/60", courseView === "grid2" && "bg-muted")}
+      onClick={() => setCourseView("grid2")}
+      aria-label="2-column grid"
+      title="Grid (2 col)"
+    >
+      {/* Custom 2-col icon via inline SVG */}
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+        <rect x="1" y="1" width="5" height="5" rx="1" fill="currentColor" opacity="0.9"/>
+        <rect x="8" y="1" width="5" height="5" rx="1" fill="currentColor" opacity="0.9"/>
+        <rect x="1" y="8" width="5" height="5" rx="1" fill="currentColor" opacity="0.9"/>
+        <rect x="8" y="8" width="5" height="5" rx="1" fill="currentColor" opacity="0.9"/>
+      </svg>
+    </Button>
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn("h-8 w-8 rounded-none border-r border-border/60", courseView === "grid1" && "bg-muted")}
+      onClick={() => setCourseView("grid1")}
+      aria-label="Single column"
+      title="List"
+    >
+      <List className="h-3.5 w-3.5" />
+    </Button>
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn("h-8 w-8 rounded-l-none", courseView === "table" && "bg-muted")}
+      onClick={() => setCourseView("table")}
+      aria-label="Compact table"
+      title="Compact"
+    >
+      <AlignJustify className="h-3.5 w-3.5" />
+    </Button>
+  </div>
+</div>
+
+{/* Course grid / list / table or empty state */}
+<CardContent className="p-4">
+  {paginatedCourses.length > 0 ? (
+    <>
+      {courseView === "grid3" && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {paginatedCourses.map((course) => (
+            <CourseCard key={course.slug} course={course} />
+          ))}
+        </div>
+      )}
+
+      {courseView === "grid2" && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {paginatedCourses.map((course) => (
+            <CourseCard key={course.slug} course={course} />
+          ))}
+        </div>
+      )}
+
+      {courseView === "grid1" && (
+        <div className="flex flex-col gap-2">
+          {paginatedCourses.map((course) => (
+            <CourseCard key={course.slug} course={course} layout="list" />
+          ))}
+        </div>
+      )}
+
+      {courseView === "table" && (
+        <div className="rounded-md border border-border/60 overflow-hidden">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-border/60 bg-muted/40">
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Course</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground hidden sm:table-cell">Instructor</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Progress</th>
+                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedCourses.map((course, i) => (
+                <tr
+                  key={course.slug}
+                  className={cn(
+                    "cursor-pointer hover:bg-muted/40 transition-colors",
+                    i !== paginatedCourses.length - 1 && "border-b border-border/60"
                   )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44">
-                <DropdownMenuLabel className="text-xs">Status</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {STATUS_OPTIONS.map((status) => (
-                  <DropdownMenuCheckboxItem
-                    key={status}
-                    checked={selectedStatuses.includes(status)}
-                    onCheckedChange={() => toggleStatus(status)}
-                    className="text-xs"
-                  >
-                    {status}
-                  </DropdownMenuCheckboxItem>
-                ))}
-                {hasActiveFilters && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <button
-                      onClick={() => setSelectedStatuses([])}
-                      className="w-full px-2 py-1.5 text-left text-xs text-muted-foreground hover:text-foreground"
-                    >
-                      Clear filters
-                    </button>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                >
+                  <td className="px-3 py-2 font-medium text-foreground max-w-[180px] truncate">{course.title}</td>
+                  <td className="px-3 py-2 text-muted-foreground hidden sm:table-cell">{course.instructor}</td>
+                  <td className="px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-20 rounded-full bg-muted overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-primary"
+                          style={{ width: `${course.progress}%` }}
+                        />
+                      </div>
+                      <span className="text-muted-foreground">{course.progress}%</span>
+                    </div>
+                  </td>
+                  <td className="px-3 py-2">
+<CourseStatusBadge status={course.status || "Unknown"} />          
+        </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  ) : (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <Search className="mb-3 h-8 w-8 text-muted-foreground/30" />
+      <p className="text-sm font-medium text-foreground">No courses found</p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Try adjusting your search or clearing the filters.
+      </p>
+      <button
+        onClick={() => { setSearch(""); setSelectedStatuses([]); }}
+        className="mt-3 text-xs font-medium underline underline-offset-2 hover:no-underline"
+      >
+        Clear all
+      </button>
+    </div>
+  )}
+</CardContent>
 
-          {/* Course grid or empty state */}
-          <CardContent className="p-4">
-            {paginatedCourses.length > 0 ? (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {paginatedCourses.map((course) => (
-                  <CourseCard key={course.slug} course={course} />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Search className="mb-3 h-8 w-8 text-muted-foreground/30" />
-                <p className="text-sm font-medium text-foreground">No courses found</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Try adjusting your search or clearing the filters.
-                </p>
-                <button
-                  onClick={() => {
-                    setSearch("");
-                    setSelectedStatuses([]);
-                  }}
-                  className="mt-3 text-xs font-medium underline underline-offset-2 hover:no-underline"
-                >
-                  Clear all
-                </button>
-              </div>
-            )}
-          </CardContent>
-
-          {/* Pagination footer — only shown when there's more than one page */}
-          {totalPages > 1 && (
-            <CardFooter className="flex items-center justify-between border-t border-border/60 px-5 py-3">
-              <p className="text-[11px] text-muted-foreground">
-                Showing {startItem}–{endItem} of {filteredCourses.length} courses
-              </p>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage(1)}
-                  disabled={page === 1}
-                  aria-label="First page"
-                >
-                  <ChevronsLeft className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  aria-label="Previous page"
-                >
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                </Button>
-
-                {/* Page number pills */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                  <Button
-                    key={n}
-                    variant={n === page ? "default" : "outline"}
-                    size="icon"
-                    className="h-7 w-7 text-[11px]"
-                    onClick={() => setPage(n)}
-                    aria-label={`Page ${n}`}
-                    aria-current={n === page ? "page" : undefined}
-                  >
-                    {n}
-                  </Button>
-                ))}
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  aria-label="Next page"
-                >
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setPage(totalPages)}
-                  disabled={page === totalPages}
-                  aria-label="Last page"
-                >
-                  <ChevronsRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            </CardFooter>
-          )}
-        </Card>
-      </div>
+    {/* Pagination footer */}
+    {totalPages > 1 && (
+      <CardFooter className="flex items-center justify-between border-t border-border/60 px-5 py-3">
+        <p className="text-[11px] text-muted-foreground">
+          Showing {startItem}–{endItem} of {filteredCourses.length} courses
+        </p>
+        <div className="flex items-center gap-1">
+          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setPage(1)} disabled={page === 1} aria-label="First page">
+            <ChevronsLeft className="h-3.5 w-3.5" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page">
+            <ChevronLeft className="h-3.5 w-3.5" />
+          </Button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <Button key={n} variant={n === page ? "default" : "outline"} size="icon" className="h-7 w-7 text-[11px]" onClick={() => setPage(n)} aria-label={`Page ${n}`} aria-current={n === page ? "page" : undefined}>
+              {n}
+            </Button>
+          ))}
+          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-label="Next page">
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setPage(totalPages)} disabled={page === totalPages} aria-label="Last page">
+            <ChevronsRight className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      </CardFooter>
+    )}
+  </Card>
+</div>
 
     </div>
   );
