@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import AppSidebar from "@/components/app-sidebar/AppSidebar";
 import { SiteHeader } from "@/components/app-sidebar/SiteHeader";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -17,6 +17,8 @@ export default function LayoutWrapper({
   const pathname = usePathname();
   const preference = useAppSelector((state) => state.preference);
   const isStudentRoute = pathname?.startsWith("/student");
+  const isStudentProfileRoute = pathname === "/student/profile";
+
   return (
     <>
       {noLayout.includes(pathname) ? (
@@ -24,13 +26,19 @@ export default function LayoutWrapper({
       ) : (
         <SidebarProvider defaultOpen={true}>
           <AppSidebar />
-          <main className="h-screen overflow-y-hidden w-full">
+          <main className="h-screen w-full overflow-hidden">
             <SiteHeader />
-            <ScrollArea className="h-content">
-              <div className={isStudentRoute ? "h-full p-6" : "h-full"}>
-                {children}
+            {isStudentProfileRoute ? (
+              <div className="h-[calc(100vh-4rem)] overflow-hidden">
+                <div className="h-full p-6 overflow-hidden">{children}</div>
               </div>
-            </ScrollArea>
+            ) : (
+              <ScrollArea className="h-content">
+                <div className={isStudentRoute ? "h-full p-6" : "h-full"}>
+                  {children}
+                </div>
+              </ScrollArea>
+            )}
             <Toaster
               duration={preference.toast?.duration}
               expand={preference.toast?.expand}

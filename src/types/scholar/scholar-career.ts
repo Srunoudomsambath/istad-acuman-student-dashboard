@@ -5,6 +5,8 @@ export type ScholarCareer = {
   position: string;
   companyType: string;
   interest: string;
+  startDate: string;
+  endDate: string;
 };
 
 export type ScholarCareerSetUp = {
@@ -13,4 +15,6 @@ export type ScholarCareerSetUp = {
   position: string;
   interest: string;
   companyType: string;
+  startDate: string;
+  endDate: string;
 };

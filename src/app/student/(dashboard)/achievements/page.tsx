@@ -1,19 +1,18 @@
-﻿import Link from "next/link";
-import {
-  Award,
-  Code2,
-  ExternalLink,
-  GraduationCap,
-  Layers3,
-  PlayCircle,
-  ScrollText,
-  Sparkles,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, PlayCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { studentProjectAchievements } from "@/lib/mock/student-project-achievements";
 
 function toneForProgram(program: string) {
@@ -31,6 +30,16 @@ function toneForProgram(program: string) {
   return "from-amber-500/15 to-orange-500/5 text-amber-700 dark:text-amber-400";
 }
 
+function statusBadgeClass(status: string) {
+  if (status === "Approved") {
+    return "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-800";
+  }
+  if (status === "Rejected") {
+    return "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800";
+  }
+  return "bg-muted text-muted-foreground border-border";
+}
+
 function ProjectCard({
   project,
 }: {
@@ -43,7 +52,7 @@ function ProjectCard({
     <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <CardContent className="space-y-5 p-5">
         <div
-          className={`relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br ${toneForProgram(project.program)} aspect-[16/10]`}
+          className={`relative aspect-[16/10] overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br ${toneForProgram(project.program)}`}
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.35),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.12),transparent_35%)]" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
@@ -125,79 +134,118 @@ function ProjectCard({
   );
 }
 
-function SummaryCard({
-  label,
-  value,
-  icon: Icon,
-  hint,
-}: {
-  label: string;
-  value: string;
-  icon: LucideIcon;
-  hint: string;
-}) {
-  return (
-    <Card className="border-border/60 bg-card/80 shadow-sm">
-      <CardContent className="flex items-start justify-between gap-4 p-5">
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="text-3xl font-semibold tracking-tight text-foreground">
-            {value}
-          </p>
-          <p className="text-xs text-muted-foreground">{hint}</p>
-        </div>
-        <div className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <Icon className="size-5" />
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
 export default function AchievementsPage() {
   const projects = studentProjectAchievements;
-  const featuredProject = projects.find((project) => project.featured) ?? projects[0];
-  const totalPrograms = new Set(projects.map((project) => project.program)).size;
-  const foundationCount = projects.filter((project) =>
-    project.tag.toLowerCase().includes("foundation")
-  ).length;
-  const advancedCount = projects.filter((project) =>
-    project.tag.toLowerCase().includes("advanced")
-  ).length;
-  const professionalCount = projects.filter((project) =>
-    project.tag.toLowerCase().includes("professional")
-  ).length;
+  const requestRows = [
+    {
+      uuid: "request-1",
+      name: "K-QuickSight",
+      program: "Data Analytics",
+      type: "Project",
+      status: "Pending",
+    },
+    {
+      uuid: "request-2",
+      name: "AutomateX",
+      program: "DevOps",
+      type: "Project",
+      status: "Approved",
+    },
+    {
+      uuid: "request-3",
+      name: "CampusFlow",
+      program: "Full Stack",
+      type: "Project",
+      status: "Rejected",
+    },
+    {
+      uuid: "request-4",
+      name: "IT Professional Demo",
+      program: "IT Professional",
+      type: "Capstone",
+      status: "Pending",
+    },
+  ];
 
   return (
     <div className="space-y-6">
-       <div className="space-y-6">
-  <div className="space-y-2">
-    {/* Header badge + small description */}
-    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-      <Badge variant="secondary" className="rounded-full text-[11px] font-semibold">
-        My Achievements
-      </Badge>
-      <span>Track student project completions, skills earned, and milestones</span>
-    </div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <Badge
+              variant="secondary"
+              className="rounded-full text-[11px] font-semibold"
+            >
+              My Achievements
+            </Badge>
+            <span>Track student project completions, skills earned, and milestones</span>
+          </div>
 
-    {/* Title + description */}
-    <div className="space-y-1">
-      <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-        Achievements
-      </h1>
-      <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-        View all the projects and milestones you have completed during your studies.
-        This overview shows your progress across courses, tracks, and personal projects.
-      </p>
-    </div>
-  </div>
-</div>
+          <div className="space-y-1">
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              Achievements
+            </h1>
+            <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+              View all the projects and milestones you have completed during your
+              studies. This overview shows your progress across courses, tracks, and
+              personal projects.
+            </p>
+          </div>
+        </div>
 
-      <div id="project-grid" className="grid gap-4 md:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectCard key={project.uuid} project={project} />
-        ))}
+        <Button asChild className="self-start">
+          <Link href="/student/achievements/request">Request Achievement</Link>
+        </Button>
       </div>
+
+      <Tabs defaultValue="achievement" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="achievement">Achievement</TabsTrigger>
+          <TabsTrigger value="request-achievement">Request Achievement</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="achievement">
+          <div id="project-grid" className="grid gap-4 md:grid-cols-2">
+            {projects.map((project) => (
+              <ProjectCard key={project.uuid} project={project} />
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="request-achievement">
+          <Card className="border-border/60 bg-card/80 shadow-sm">
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-6">Name</TableHead>
+                    <TableHead>Program</TableHead>
+                    <TableHead>Program Type</TableHead>
+                    <TableHead className="pr-6">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {requestRows.map((row) => (
+                    <TableRow key={row.uuid}>
+                      <TableCell className="px-6 font-medium">{row.name}</TableCell>
+                      <TableCell>{row.program}</TableCell>
+                      <TableCell>{row.type}</TableCell>
+                      <TableCell className="pr-6">
+                        <Badge variant="outline" className={statusBadgeClass(row.status)}>
+                          {row.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
+
+
+

@@ -8,6 +8,7 @@ import {
   BadgeCheck,
   Bell,
   BookOpen,
+  Calendar,
   ChevronDown,
   CreditCard,
   FileBadge2,
@@ -55,6 +56,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { studentProfile } from "@/lib/mock/student";
+import { useGetCurrentStudentProfileQuery, useGetStudentEnrollmentsQuery } from "@/features/student-portal/studentPortalApi";
+import type { StudentEnrollment } from "@/lib/types/student";
 
 type NavChild = {
   title: string;
@@ -148,79 +151,80 @@ const data = {
   ],
 };
 
-const studentNavGroups: NavGroup[] = [
-  {
-    label: "Main",
-    items: [
-      {
-        title: "Dashboard",
-        url: "/student",
-        icon: LayoutDashboard,
-      },
-    ],
-  },
-  {
-    label: "Study",
-    items: [
-      {
-        title: "Courses",
-        icon: BookOpen,
-        items: [
-          {
-            title: "My Courses",
-            url: "/student/courses",
-          },
-          {
-            title: "Schedule",
-            url: "/student/schedule",
-          },
-        ],
-      },
-      {
-        title: "Records",
-        icon: GraduationCap,
-        items: [
-          {
-            title: "Achievements",
-            url: "/student/achievements",
-          },
-          {
-            title: "Certificates",
-            url: "/student/certificates",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Finance",
-    items: [
-      {
-        title: "Payments",
-        url: "/student/payments",
-        icon: CreditCard,
-      },
-    ],
-  },
-  {
-    label: "Account",
-    items: [
-      {
-        title: "Profile",
-        url: "/student/profile",
-        icon: User2,
-      },
-      {
-        title: "Settings",
-        url: "/student/settings",
-        icon: Settings2,
-      },
-    ],
-  },
-];
+function createStudentNavGroups(enrollments: StudentEnrollment[]): NavGroup[] {
+  return [
+    {
+      label: "Main",
+      items: [
+        {
+          title: "Dashboard",
+          url: "/student",
+          icon: LayoutDashboard,
+        },
+        {
+          title: "Calendar",
+          url: "/student/schedule",
+          icon: Calendar,
+        },
+      ],
+    },
+    {
+      label: "Study",
+      items: [
+        {
+          title: "Courses",
+          icon: BookOpen,
+          items: enrollments.map((enrollment) => ({
+            title: enrollment.title,
+            url: enrollment.url,
+          })),
+        },
+        {
+          title: "Records",
+          icon: GraduationCap,
+          items: [
+            {
+              title: "Achievements",
+              url: "/student/achievements",
+            },
+            {
+              title: "Certificates",
+              url: "/student/certificates",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Finance",
+      items: [
+        {
+          title: "Payments",
+          url: "/student/payments",
+          icon: CreditCard,
+        },
+      ],
+    },
+    {
+      label: "Account",
+      items: [
+        {
+          title: "Profile",
+          url: "/student/profile",
+          icon: User2,
+        },
+        {
+          title: "Settings",
+          url: "/student/settings",
+          icon: Settings2,
+        },
+      ],
+    },
+  ];
+}
 
-function findActiveRoute(pathname: string) {
-  for (const group of studentNavGroups) {
+function findActiveRoute(pathname: string, navGroups: NavGroup[]) {
+  for (const group of navGroups) {
     for (const item of group.items) {
       if (item.items?.some((subItem) => subItem.url === pathname)) {
         return item.title;
@@ -235,7 +239,14 @@ function StudentSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { isMobile } = useSidebar();
-  const activeRoute = findActiveRoute(pathname);
+  const { data: profile = studentProfile } = useGetCurrentStudentProfileQuery();
+  const { data: enrollments = studentProfile.enrollments } =
+    useGetStudentEnrollmentsQuery();
+  const studentNavGroups = React.useMemo(
+    () => createStudentNavGroups(enrollments),
+    [enrollments]
+  );
+  const activeRoute = findActiveRoute(pathname, studentNavGroups);
 
   return (
     <Sidebar collapsible="icon" className="z-50">
@@ -340,11 +351,11 @@ function StudentSidebar() {
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src={studentProfile.avatar}
-                      alt={studentProfile.englishName}
+                      src={profile.avatar}
+                      alt={profile.englishName}
                     />
                     <AvatarFallback className="rounded-lg">
-                      {studentProfile.englishName
+                      {profile.englishName
                         .split(" ")
                         .map((part) => part[0])
                         .join("")
@@ -354,14 +365,14 @@ function StudentSidebar() {
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">
-                      {studentProfile.accountName}
+                      {profile.accountName}
                     </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      {studentProfile.email}
+                      {profile.email}
                     </span>
                   </div>
                   <Badge variant="secondary" className="ml-1 rounded-full">
-                    {studentProfile.status}
+                    {profile.status}
                   </Badge>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -376,11 +387,11 @@ function StudentSidebar() {
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage
-                          src={studentProfile.avatar}
-                          alt={studentProfile.englishName}
+                          src={profile.avatar}
+                          alt={profile.englishName}
                         />
                         <AvatarFallback className="rounded-lg">
-                          {studentProfile.englishName
+                          {profile.englishName
                             .split(" ")
                             .map((part) => part[0])
                             .join("")
@@ -390,10 +401,10 @@ function StudentSidebar() {
                       </Avatar>
                       <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-medium">
-                          {studentProfile.englishName}
+                          {profile.englishName}
                         </span>
                         <span className="truncate text-xs text-muted-foreground">
-                          {studentProfile.email}
+                          {profile.email}
                         </span>
                       </div>
                     </div>

@@ -1,212 +1,263 @@
-﻿import {
-  BookOpenText,
-  CalendarDays,
-  CheckCircle2,
-  Clock3,
-  CreditCard,
-  Download,
-} from "lucide-react";
+import {
+  HighDegreeTrackingSection,
+  PaymentOverviewSection,
+  PaymentTabs,
+  RecentHistorySection,
+  ScholarshipTrackingSection,
+  TabsContent,
+  formatCurrency,
+  formatDate,
+  getInstallmentRemaining,
+  highDegreeProgram,
+  paymentHistory,
+  scholarshipPrograms,
+} from "@/components/student/payments";
+import type { ReactNode } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-
-type CoursePayment = {
-  title: string;
-  semester: string;
-  paid: number;
-  remaining: number;
-  status: "Paid" | "Partial";
-};
-
-type PaymentHistoryItem = {
-  date: string;
-  description: string;
+type OverviewItem = {
   amount: number;
-  method: string;
-  status: "Paid" | "Partial" | "Pending";
+  paidAmount: number;
+  dueDate: string;
+  groupTitle: string;
 };
 
-const coursePayments: CoursePayment[] = [
-  {
-    title: "Full Stack Development",
-    semester: "Semester 1 - 2024",
-    paid: 1200,
-    remaining: 0,
-    status: "Paid",
-  },
-  {
-    title: "Full Stack Development",
-    semester: "Semester 2 - 2024",
-    paid: 600,
-    remaining: 600,
-    status: "Partial",
-  },
-];
+type OverviewResult = {
+  progress: number;
+  summaryCards: { label: string; value: string; tone: string }[];
+  metricValue: string;
+  nextDueLine?: string;
+  alertTitle: string;
+  alertMessage: string;
+  isOverdue: boolean;
+};
 
-const paymentHistory: PaymentHistoryItem[] = [
-  {
-    date: "Jan 15, 2024",
-    description: "Full Stack Development - Semester 1",
-    amount: 1200,
-    method: "Bank",
-    status: "Paid",
-  },
-  {
-    date: "Jul 08, 2024",
-    description: "Full Stack Development - Semester 2",
-    amount: 600,
-    method: "Cash",
-    status: "Partial",
-  },
-  {
-    date: "Sep 10, 2024",
-    description: "Lab fee",
-    amount: 150,
-    method: "Bank",
-    status: "Paid",
-  },
-];
+function buildOverview(installments: OverviewItem[]): OverviewResult {
+  const today = new Date("2026-04-02T00:00:00");
+  const totalFee = installments.reduce((sum, item) => sum + item.amount, 0);
+  const totalPaid = installments.reduce((sum, item) => sum + item.paidAmount, 0);
+  const totalRemaining = installments.reduce(
+    (sum, item) => sum + (item.amount - item.paidAmount),
+    0
+  );
+  const overdueInstallments = installments.filter(
+    (item) => item.amount - item.paidAmount > 0 && new Date(item.dueDate) < today
+  );
+  const overdueAmount = overdueInstallments.reduce(
+    (sum, item) => sum + (item.amount - item.paidAmount),
+    0
+  );
+  const nextDueInstallment = installments
+    .filter((item) => item.amount - item.paidAmount > 0)
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())[0];
+  const progress = totalFee === 0 ? 0 : Math.round((totalPaid / totalFee) * 100);
+  const nextDueDate = nextDueInstallment ? new Date(nextDueInstallment.dueDate) : null;
+  const daysUntilDue = nextDueDate
+    ? Math.ceil((nextDueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+    : null;
+  const isOverdue = overdueAmount > 0;
+  const isNearDue = !isOverdue && daysUntilDue !== null && daysUntilDue <= 3;
+
+  const alertTitle = isOverdue
+    ? "Overdue payment"
+    : isNearDue
+      ? "Upcoming payment"
+      : "Payments on track";
+
+  const alertMessage = isOverdue
+    ? nextDueInstallment
+      ? `${formatCurrency(overdueAmount)} overdue. Due ${formatDate(nextDueInstallment.dueDate)}`
+      : `${formatCurrency(overdueAmount)} is overdue.`
+    : isNearDue && nextDueInstallment
+      ? `Next due: ${formatCurrency(getInstallmentRemaining(nextDueInstallment))} on ${formatDate(nextDueInstallment.dueDate)}.`
+      : nextDueInstallment
+        ? `Next due: ${formatCurrency(getInstallmentRemaining(nextDueInstallment))} on ${formatDate(nextDueInstallment.dueDate)}.`
+        : "All current plans are fully paid.";
+
+  const summaryCards = [
+    { label: "Total", value: formatCurrency(totalFee), tone: "text-foreground" },
+    { label: "Paid", value: formatCurrency(totalPaid), tone: "text-emerald-600" },
+    {
+      label: "Balance",
+      value: formatCurrency(totalRemaining),
+      tone: totalRemaining > 0 ? "text-rose-500" : "text-emerald-600",
+    },
+    {
+      label: "Next Due",
+      value: nextDueInstallment ? formatDate(nextDueInstallment.dueDate) : "No due",
+      tone: isOverdue ? "text-destructive" : "text-amber-600",
+    },
+  ];
+
+  const nextDueLine = nextDueInstallment
+    ? `${nextDueInstallment.groupTitle} - ${formatCurrency(getInstallmentRemaining(nextDueInstallment))} due ${formatDate(nextDueInstallment.dueDate)}`
+    : undefined;
+
+  return {
+    progress,
+    summaryCards,
+    metricValue: formatCurrency(totalPaid),
+    nextDueLine,
+    alertTitle,
+    alertMessage,
+    isOverdue,
+  };
+}
 
 export default function PaymentsPage() {
-  const totalFee = 2400;
-  const totalPaid = coursePayments.reduce((sum, item) => sum + item.paid, 0);
-  const remaining = totalFee - totalPaid;
-  const progress = Math.round((totalPaid / totalFee) * 100);
+  const bachelorInstallments = highDegreeProgram.terms.flatMap((term) =>
+    term.installments.map((installment) => ({
+      ...installment,
+      groupTitle: `${highDegreeProgram.programTitle} / ${term.label}`,
+    }))
+  );
+
+  const preUniversityProgram =
+    scholarshipPrograms.find((program) => program.programTitle === "Pre-University Foundation") ??
+    scholarshipPrograms[0];
+  const itProfessionalProgram =
+    scholarshipPrograms.find((program) => program.programTitle === "IT Professional Scholarship") ??
+    scholarshipPrograms[1];
+
+  const preUniversityInstallments = preUniversityProgram.installments.map((installment) => ({
+    ...installment,
+    groupTitle: preUniversityProgram.programTitle,
+  }));
+  const itProfessionalInstallments = itProfessionalProgram.installments.map((installment) => ({
+    ...installment,
+    groupTitle: itProfessionalProgram.programTitle,
+  }));
+
+  const allInstallments = [
+    ...bachelorInstallments,
+    ...itProfessionalInstallments,
+    ...preUniversityInstallments,
+  ];
+
+  const overallOverview = buildOverview(allInstallments);
+  const bachelorOverview = buildOverview(bachelorInstallments);
+  const itProfessionalOverview = buildOverview(itProfessionalInstallments);
+  const preUniversityOverview = buildOverview(preUniversityInstallments);
+
+  const activePlanCount = 1 + scholarshipPrograms.length;
+  const overallSummaryCards = [
+    { label: "Total", value: overallOverview.summaryCards[0].value, tone: "text-foreground" },
+    { label: "Paid", value: overallOverview.summaryCards[1].value, tone: "text-emerald-600" },
+    {
+      label: "Balance",
+      value: overallOverview.summaryCards[2].value,
+      tone: overallOverview.summaryCards[2].tone,
+    },
+    { label: "Active Plans", value: String(activePlanCount), tone: "text-foreground" },
+  ];
+  const overallNextLine = `Active plans: 1 high-degree and ${scholarshipPrograms.length} scholarship.`;
+
+  const planOverviews = [
+    { label: "High-degree", overview: bachelorOverview },
+    { label: "IT Professional Scholarship", overview: itProfessionalOverview },
+    { label: "Pre-University Foundation", overview: preUniversityOverview },
+  ];
+
+  const summaryAlertSource =
+    planOverviews.find((item) => item.overview.alertTitle === "Overdue payment") ?? {
+      label: "Overall",
+      overview: overallOverview,
+    };
+
+  const summaryUpcomingSource =
+    planOverviews.find((item) => item.overview.alertTitle === "Upcoming payment") ??
+    planOverviews.find(
+      (item) =>
+        item.overview.alertTitle === "Payments on track" &&
+        item.overview.alertMessage.startsWith("Next due:")
+    );
+
+  const summaryAlertTitle = summaryAlertSource.overview.alertTitle;
+  const summaryAlertMessage: ReactNode =
+    summaryAlertSource.label === "Overall"
+      ? summaryAlertSource.overview.alertMessage
+      : (
+          <>
+            <p>{summaryAlertSource.label}</p>
+            <p>{summaryAlertSource.overview.alertMessage}</p>
+          </>
+        );
+
+  const summarySecondaryAlertTitle =
+    summaryUpcomingSource && summaryUpcomingSource.label !== summaryAlertSource.label
+      ? summaryUpcomingSource.overview.alertTitle
+      : undefined;
+
+  const summarySecondaryAlertMessage: ReactNode =
+    summaryUpcomingSource && summaryUpcomingSource.label !== summaryAlertSource.label
+      ? (
+          <>
+            <p>{summaryUpcomingSource.label}</p>
+            <p>{summaryUpcomingSource.overview.alertMessage}</p>
+          </>
+        )
+      : undefined;
+
+  const bachelorHistory = paymentHistory.filter((item) => item.studyType === "High-degree");
+  const preUniversityHistory = paymentHistory.filter((item) =>
+    item.description.includes("Foundation")
+  );
+  const itProfessionalHistory = paymentHistory.filter(
+    (item) => item.description.includes("IT Professional") || item.description.includes("ITP")
+  );
 
   return (
-    <div className="space-y-6">
-      {/* Payment Progress */}
-      <Card className="border-border/60 bg-card/80 shadow-sm">
-        <CardContent className="space-y-6 p-6">
-          <div className="rounded-2xl bg-muted/20 p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="font-medium">Payment Progress</p>
-              <p className="text-sm text-muted-foreground">{progress}%</p>
-            </div>
-            <Progress value={progress} className="h-4" />
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl bg-background/70 p-4 text-center">
-                <p className="text-sm text-muted-foreground">Total Fee</p>
-                <p className="mt-1 text-2xl font-semibold">
-                  ${totalFee.toLocaleString()}.00
-                </p>
-              </div>
-              <div className="rounded-2xl bg-background/70 p-4 text-center">
-                <p className="text-sm text-muted-foreground">Amount Paid</p>
-                <p className="mt-1 text-2xl font-semibold text-emerald-600">
-                  ${totalPaid.toLocaleString()}.00
-                </p>
-              </div>
-              <div className="rounded-2xl bg-background/70 p-4 text-center">
-                <p className="text-sm text-muted-foreground">Remaining</p>
-                <p className="mt-1 text-2xl font-semibold text-rose-500">
-                  ${remaining.toLocaleString()}.00
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <PaymentTabs>
+      <TabsContent value="summary" className="space-y-4">
+        <PaymentOverviewSection
+          {...overallOverview}
+          summaryCards={overallSummaryCards}
+          nextDueLine={overallNextLine}
+          metricLabel="Paid"
+          title="Payment Summary"
+          description="Overall payment progress across all active plans."
+          alertTitle={summaryAlertTitle}
+          alertMessage={summaryAlertMessage}
+          secondaryAlertTitle={summarySecondaryAlertTitle}
+          secondaryAlertMessage={summarySecondaryAlertMessage}
+        />
+        <RecentHistorySection items={paymentHistory} />
+      </TabsContent>
 
-      {/* My Courses */}
-      <Card className="border-border/60 bg-card/80 shadow-sm">
-        <CardHeader className="border-b bg-muted/20">
-          <CardTitle className="flex items-center gap-2">
-            <BookOpenText className="size-5 text-primary" />
-            My Courses
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 p-5">
-          {coursePayments.map((item) => (
-            <div
-              key={`${item.title}-${item.semester}`}
-              className="flex flex-col gap-4 rounded-2xl border bg-background/70 p-4 md:flex-row md:items-center md:justify-between"
-            >
-              <div className="space-y-2">
-                <div>
-                  <p className="text-lg font-semibold">{item.title}</p>
-                  <p className="text-sm text-muted-foreground">{item.semester}</p>
-                </div>
-                <p className="text-sm">
-                  Paid:{" "}
-                  <span className="font-medium text-emerald-600">
-                    ${item.paid.toLocaleString()}.00
-                  </span>{" "}
-                  Remaining:{" "}
-                  <span className="font-medium text-rose-500">
-                    ${item.remaining.toLocaleString()}.00
-                  </span>
-                </p>
-              </div>
+      <TabsContent value="bachelor" className="space-y-4">
+        <PaymentOverviewSection
+          {...bachelorOverview}
+          metricLabel="Paid"
+          eyebrow="Bachelor"
+          title="Bachelor Payment Overview"
+          description="Overview for the bachelor payment plan and all semester activity."
+        />
+        <HighDegreeTrackingSection program={highDegreeProgram} />
+        <RecentHistorySection items={bachelorHistory} />
+      </TabsContent>
 
-              <div className="flex items-center gap-3">
-                {item.status === "Paid" ? (
-                  <CheckCircle2 className="size-5 text-emerald-500" />
-                ) : (
-                  <Clock3 className="size-5 text-amber-500" />
-                )}
-                <Badge
-                  className={
-                    item.status === "Paid"
-                      ? "rounded-full bg-emerald-500 text-white hover:bg-emerald-500"
-                      : "rounded-full bg-amber-500 text-white hover:bg-amber-500"
-                  }
-                >
-                  {item.status}
-                </Badge>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+      <TabsContent value="itp" className="space-y-4">
+        <PaymentOverviewSection
+          {...itProfessionalOverview}
+          metricLabel="Paid"
+          eyebrow="Scholarship"
+          title="IT Professional Scholarship Overview"
+          description="Overview for the IT Professional Scholarship payment plan."
+        />
+        <ScholarshipTrackingSection programs={[itProfessionalProgram]} />
+        <RecentHistorySection items={itProfessionalHistory} />
+      </TabsContent>
 
-      {/* Payment History */}
-      <Card className="border-border/60 bg-card/80 shadow-sm">
-        <CardHeader className="border-b bg-muted/20">
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="size-5 text-primary" />
-            Payment History
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 p-5">
-          {paymentHistory.map((item) => (
-            <div
-              key={`${item.date}-${item.description}`}
-              className="flex flex-col gap-4 rounded-2xl border bg-background/70 p-4 md:flex-row md:items-center md:justify-between"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                  <CheckCircle2 className="size-6" />
-                </div>
-                <div>
-                  <p className="font-semibold">{item.description}</p>
-                  <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-                    <CalendarDays className="size-4" />
-                    <span>{item.date}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 md:text-right">
-                <div>
-                  <p className="text-lg font-semibold">
-                    ${item.amount.toLocaleString()}.00
-                  </p>
-                  <Badge variant="secondary" className="rounded-full">
-                    {item.method.toLowerCase()}
-                  </Badge>
-                </div>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Download className="size-4" />
-                  Receipt
-                </Button>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </div>
+      <TabsContent value="pre-university" className="space-y-4">
+        <PaymentOverviewSection
+          {...preUniversityOverview}
+          metricLabel="Paid"
+          eyebrow="Scholarship"
+          title="Pre-University Foundation Overview"
+          description="Overview for the Pre-University Foundation payment plan."
+        />
+        <ScholarshipTrackingSection programs={[preUniversityProgram]} />
+        <RecentHistorySection items={preUniversityHistory} />
+      </TabsContent>
+    </PaymentTabs>
   );
 }

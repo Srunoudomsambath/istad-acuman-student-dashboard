@@ -9,6 +9,8 @@ export type Career = {
   position: string;
   salary: number;
   interest: string;
+  startDate: string;
+  endDate: string;
 };
 
 export type Specialist = {
@@ -84,6 +86,16 @@ export type PaymentRecord = {
   status: PaymentStatus;
 };
 
+export type StudentEnrollment = {
+  id: string;
+  source: "lms" | "exstad";
+  type: "degree" | "scholarship" | "short-course";
+  title: string;
+  slug: string;
+  url: string;
+  status: "active" | "completed" | "paused";
+};
+
 export type Scholar = {
   id: number;
   uuid: string;
@@ -118,6 +130,7 @@ export type Scholar = {
   achievements: Achievement[];
   badges: Badge[];
   payments: PaymentRecord[];
+  enrollments: StudentEnrollment[];
   year: string;
   generation: string;
   major: string;
@@ -143,5 +156,3 @@ export type UpcomingPayment = {
   amount: number;
   daysLeft: number;
 };
-
-
