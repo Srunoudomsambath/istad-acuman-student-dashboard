@@ -116,8 +116,8 @@ export function LearningDetailPage({
       : detail.curriculum;
   const totalCurriculum = curriculumItems.length;
   const statCards = [
-    { icon: <Briefcase className="size-3.5" />, label: "Practice", value: detail.practiceLabel },
-    { icon: <Building2 className="size-3.5" />, label: "Internship", value: detail.internshipLabel },
+    { icon: <CalendarDays className="size-3.5" />, label: "Duration", value: "6 months" },
+    { icon: <Award className="size-3.5" />, label: "Scholarship", value: "50%" },
   ];
 
   if (detail.type !== "scholarship") {

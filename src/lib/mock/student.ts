@@ -15,7 +15,7 @@ export const studentProfile: Scholar = {
   accountName: "John123",
   username: "john_doe",
   englishName: "Chan Chhaya",
-  khmerName: "Chan Chhaya",
+  khmerName: "\u1785\u17B6\u1793\u17CB\u200B \u1786\u17C3\u1799\u17C9\u17B6",
   email: "john.doe@example.com",
   gender: "Male",
   dob: "2003-05-15",

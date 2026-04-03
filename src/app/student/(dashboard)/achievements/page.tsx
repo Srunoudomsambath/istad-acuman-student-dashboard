@@ -140,6 +140,7 @@ export default function AchievementsPage() {
     {
       uuid: "request-1",
       name: "K-QuickSight",
+      logo: "KQ",
       program: "Data Analytics",
       type: "Project",
       status: "Pending",
@@ -147,6 +148,7 @@ export default function AchievementsPage() {
     {
       uuid: "request-2",
       name: "AutomateX",
+      logo: "AX",
       program: "DevOps",
       type: "Project",
       status: "Approved",
@@ -154,6 +156,7 @@ export default function AchievementsPage() {
     {
       uuid: "request-3",
       name: "CampusFlow",
+      logo: "CF",
       program: "Full Stack",
       type: "Project",
       status: "Rejected",
@@ -161,6 +164,7 @@ export default function AchievementsPage() {
     {
       uuid: "request-4",
       name: "IT Professional Demo",
+      logo: "IT",
       program: "IT Professional",
       type: "Capstone",
       status: "Pending",
@@ -213,25 +217,52 @@ export default function AchievementsPage() {
         </TabsContent>
 
         <TabsContent value="request-achievement">
-          <Card className="border-border/60 bg-card/80 shadow-sm">
+          <Card className="overflow-hidden border-border/60 bg-card/90 shadow-sm p-0">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="px-6">Name</TableHead>
-                    <TableHead>Program</TableHead>
-                    <TableHead>Program Type</TableHead>
-                    <TableHead className="pr-6">Status</TableHead>
+                  <TableRow className="bg-muted/20 hover:bg-muted/20">
+                    <TableHead className="pl-6 font-medium text-muted-foreground">Logo</TableHead>
+                    <TableHead className="font-medium text-muted-foreground">Name</TableHead>
+                    <TableHead className="font-medium text-muted-foreground">Program</TableHead>
+                    <TableHead className="font-medium text-muted-foreground">
+                      Program Type
+                    </TableHead>
+                    <TableHead className="pr-6 font-medium text-muted-foreground">
+                      Status
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
                   {requestRows.map((row) => (
-                    <TableRow key={row.uuid}>
-                      <TableCell className="px-6 font-medium">{row.name}</TableCell>
-                      <TableCell>{row.program}</TableCell>
-                      <TableCell>{row.type}</TableCell>
+                    <TableRow
+                      key={row.uuid}
+                      className="group border-border/50 transition-colors hover:bg-muted/35"
+                    >
+                      <TableCell className="pl-6">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-muted/30 text-sm font-semibold text-foreground">
+                          {row.logo}
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="font-medium text-foreground">
+                        {row.name}
+                      </TableCell>
+
+                      <TableCell className="text-sm text-muted-foreground">
+                        {row.program}
+                      </TableCell>
+
+                      <TableCell className="text-sm text-muted-foreground">
+                        {row.type}
+                      </TableCell>
+
                       <TableCell className="pr-6">
-                        <Badge variant="outline" className={statusBadgeClass(row.status)}>
+                        <Badge
+                          variant="outline"
+                          className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${statusBadgeClass(row.status)}`}
+                        >
                           {row.status}
                         </Badge>
                       </TableCell>
@@ -246,6 +277,19 @@ export default function AchievementsPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

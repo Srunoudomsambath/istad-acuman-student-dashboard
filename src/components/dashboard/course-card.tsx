@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, GraduationCap, Users } from "lucide-react";
 
@@ -17,10 +17,10 @@ type CourseCardProps = {
 export function CourseCard({ course, layout = "card" }: CourseCardProps) {
   if (layout === "list") {
     return (
-      <Card className="group overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:shadow-md">
-        <CardContent className="flex items-center gap-4 p-4">
+      <Card className="group overflow-hidden border-border/60 bg-card/80 py-0 shadow-sm transition-all duration-200 hover:shadow-md">
+        <CardContent className="flex items-center gap-5 px-5 py-5">
           {/* Logo */}
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary/10">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary/10">
             <Image
               src={course.logo}
               alt={`${course.title} logo`}
@@ -31,7 +31,7 @@ export function CourseCard({ course, layout = "card" }: CourseCardProps) {
           </div>
 
           {/* Main info */}
-          <div className="min-w-0 flex-1 space-y-1">
+          <div className="min-w-0 flex-1 space-y-1.5">
             <div className="flex flex-wrap items-center gap-1.5">
               <h3 className="text-sm font-semibold tracking-tight truncate">
                 {course.title}
@@ -57,7 +57,7 @@ export function CourseCard({ course, layout = "card" }: CourseCardProps) {
           </div>
 
           {/* Progress */}
-          <div className="hidden w-32 shrink-0 space-y-1 sm:block">
+          <div className="hidden w-36 shrink-0 space-y-1.5 sm:block">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">Progress</span>
               <span className="font-medium">{course.progress}%</span>
@@ -77,9 +77,9 @@ export function CourseCard({ course, layout = "card" }: CourseCardProps) {
     );
   }
 
-  // ── Default card layout ──────────────────────────────────────────────────
+  // -- Default card layout --------------------------------------------------
   return (
-    <Card className="group overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <Card className="group overflow-hidden border-border/60 bg-card/80 py-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <CardContent className="space-y-5 p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 space-y-2">
@@ -130,8 +130,7 @@ export function CourseCard({ course, layout = "card" }: CourseCardProps) {
           <Progress value={course.progress} />
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between border-t bg-muted/20 p-5">
-        <p className="text-sm text-muted-foreground">{course.summary}</p>
+      <CardFooter className="flex justify-end border-t bg-muted/20 p-4">
         <Button asChild variant="ghost" className="gap-1">
           <Link href={`/student/courses/${course.slug}`}>
             View detail

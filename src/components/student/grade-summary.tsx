@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardFooter } from '../ui/card';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { Card, CardContent, CardFooter } from "../ui/card";
 
 type GradeItem = {
   subject: string;
@@ -10,59 +11,32 @@ type GradeItem = {
 
 type Semester = {
   id: string;
-  label: string;          // e.g. "Semester 1"
-  year: string;           // e.g. "2023–2024"
+  label: string;
+  year: string;
   gpa: number;
   maxGpa: number;
   grades: GradeItem[];
 };
 
-// ─── Grade Row ────────────────────────────────────────────────────────────────
 function GradeRow({ subject, grade, score }: GradeItem) {
   const color =
     score >= 85
       ? "text-emerald-600 dark:text-emerald-400"
       : score >= 70
-      ? "text-sky-600 dark:text-sky-400"
-      : score >= 50
-      ? "text-amber-600 dark:text-amber-400"
-      : "text-red-500";
+        ? "text-sky-600 dark:text-sky-400"
+        : score >= 50
+          ? "text-amber-600 dark:text-amber-400"
+          : "text-red-500";
 
   return (
-    <div className="flex items-center gap-5 py-4">
-      {/* Subject */}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-base font-semibold text-foreground">
-          {subject}
-        </p>
-      </div>
-
-      {/* Right side */}
-      <div className="flex items-center gap-5">
-        {/* BIG progress bar */}
-        <div className="h-2.5 w-28 overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full bg-current opacity-90 transition-all duration-500"
-            style={{ width: `${score}%`, color: "inherit" }}
-          />
-        </div>
-
-        {/* Grade */}
-        <span className={`w-8 text-center text-base font-bold ${color}`}>
-          {grade}
-        </span>
-
-        {/* Score */}
-        <span className="w-12 text-right text-sm text-muted-foreground">
-          {score}%
-        </span>
-      </div>
+    <div className="grid grid-cols-[minmax(0,1fr)_40px_48px] items-center gap-3 rounded-xl border border-border/60 bg-background/50 px-3 py-2.5">
+      <p className="truncate text-sm font-medium text-foreground">{subject}</p>
+      <span className={`text-right text-sm font-semibold ${color}`}>{grade}</span>
+      <span className="text-right text-xs text-muted-foreground">{score}%</span>
     </div>
   );
 }
 
-
-// ─── Semester Dots ────────────────────────────────────────────────────────────
 function SemesterDots({
   total,
   current,
@@ -90,24 +64,18 @@ function SemesterDots({
   );
 }
 
-// ─── GradeCard ────────────────────────────────────────────────────────────────
 export function GradeCard({
   semesters,
   loading = false,
 }: {
-  /**
-   * Pass your real semesters array from the API here.
-   * The component falls back to placeholder data when this is undefined/empty.
-   */
   semesters?: Semester[];
   loading?: boolean;
 }) {
-  // ── Placeholder data (remove once API is wired up) ────────────────────────
   const placeholder: Semester[] = [
     {
       id: "s1",
       label: "Semester 1",
-      year: "2022–2023",
+      year: "2022-2023",
       gpa: 3.45,
       maxGpa: 4.0,
       grades: [
@@ -121,7 +89,7 @@ export function GradeCard({
     {
       id: "s2",
       label: "Semester 2",
-      year: "2022–2023",
+      year: "2022-2023",
       gpa: 3.61,
       maxGpa: 4.0,
       grades: [
@@ -135,7 +103,7 @@ export function GradeCard({
     {
       id: "s3",
       label: "Semester 3",
-      year: "2023–2024",
+      year: "2023-2024",
       gpa: 3.52,
       maxGpa: 4.0,
       grades: [
@@ -149,7 +117,7 @@ export function GradeCard({
     {
       id: "s4",
       label: "Semester 4",
-      year: "2023–2024",
+      year: "2023-2024",
       gpa: 3.78,
       maxGpa: 4.0,
       grades: [
@@ -162,7 +130,6 @@ export function GradeCard({
   ];
 
   const data = semesters && semesters.length > 0 ? semesters : placeholder;
-
   const [index, setIndex] = useState(0);
 
   const prev = () => setIndex((i) => Math.max(0, i - 1));
@@ -170,65 +137,76 @@ export function GradeCard({
 
   const semester = data[index];
   const gpaPercent = (semester.gpa / semester.maxGpa) * 100;
+  const topGradeCount = semester.grades.filter((item) => item.score >= 85).length;
+  const averageScore = Math.round(
+    semester.grades.reduce((sum, item) => sum + item.score, 0) / semester.grades.length
+  );
 
   return (
-    <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-      {/* ── Header — same sizing as PanelHeader, semester-switcher style ──────── */}
-      <div className="flex items-center justify-between border-b border-border/60 bg-muted/20 px-6 py-4">
-        {/* Left: label (lg/xl like CardTitle) + year (sm muted like description) */}
-        <div className="space-y-1">
-          <p className="text-lg font-semibold leading-none tracking-tight sm:text-xl">
+    <Card className="overflow-hidden border-border/60 bg-card/80 py-0 shadow-sm">
+      <div className="flex items-center justify-between border-b border-border/60 bg-muted/20 px-5 py-3.5">
+        <div className="space-y-0.5">
+          <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
             {semester.label}
           </p>
-          <p className="text-sm leading-6 text-muted-foreground">{semester.year}</p>
+          <p className="text-xs text-muted-foreground">{semester.year}</p>
         </div>
 
-        {/* Right: dots + arrows — same icon size as PanelHeader actions */}
         <div className="flex items-center gap-2">
           <SemesterDots total={data.length} current={index} onChange={setIndex} />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <button
               onClick={prev}
               disabled={index === 0}
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Previous semester"
             >
-              <ChevronLeft className="size-4" />
+              <ChevronLeft className="size-3.5" />
             </button>
             <button
               onClick={next}
               disabled={index === data.length - 1}
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
               aria-label="Next semester"
             >
-              <ChevronRight className="size-4" />
+              <ChevronRight className="size-3.5" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── Grade rows ──────────────────────────────────────────────────────── */}
-<CardContent className="divide-y divide-border/60 px-6 py-5 space-y-2 min-h-[300px]">        {loading
-          ? // Skeleton rows while API loads
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-3 py-2.5 animate-pulse">
-                <div className="flex-1 h-2.5 rounded bg-muted" />
-                <div className="h-1.5 w-20 rounded-full bg-muted" />
-                <div className="w-6 h-2.5 rounded bg-muted" />
-                <div className="w-8 h-2.5 rounded bg-muted" />
-              </div>
-            ))
-          : semester.grades.map((g) => (
-              <GradeRow key={g.subject} {...g} />
-            ))}
+      <CardContent className="space-y-4 p-4">
+        <div className="grid grid-cols-3 gap-2 rounded-xl border border-border/60 bg-muted/10 p-3">
+          <div>
+            <p className="text-[11px] text-muted-foreground">Courses</p>
+            <p className="mt-1 text-sm font-semibold text-foreground">{semester.grades.length}</p>
+          </div>
+          <div>
+            <p className="text-[11px] text-muted-foreground">Top Grades</p>
+            <p className="mt-1 text-sm font-semibold text-foreground">{topGradeCount}</p>
+          </div>
+          <div>
+            <p className="text-[11px] text-muted-foreground">Avg. Score</p>
+            <p className="mt-1 text-sm font-semibold text-foreground">{averageScore}%</p>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          {loading
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-11 animate-pulse rounded-xl bg-muted" />
+              ))
+            : semester.grades.map((g, rowIndex) => (
+                <GradeRow key={`${g.subject}-${rowIndex}`} {...g} />
+              ))}
+        </div>
       </CardContent>
 
-      {/* ── Footer: GPA ─────────────────────────────────────────────────────── */}
-      <CardFooter className="block border-t border-border/60 px-5 py-4">
+      <CardFooter className="block border-t border-border/60 px-5 py-3.5">
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground">Semester GPA</span>
-          <span className="text-sm font-bold text-foreground">
-            {loading ? "—" : `${semester.gpa.toFixed(2)} / ${semester.maxGpa.toFixed(2)}`}
+          <span className="text-sm font-semibold text-foreground">
+            {loading ? "-" : `${semester.gpa.toFixed(2)} / ${semester.maxGpa.toFixed(2)}`}
           </span>
         </div>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">

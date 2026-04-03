@@ -14,70 +14,60 @@ type CourseProgressCardProps = {
 
 export function CourseProgressCard({
   courses,
-  perPage = 2,
+  perPage = 3,
 }: CourseProgressCardProps) {
   const [page, setPage] = useState(0);
 
   const totalPages = Math.ceil(courses.length / perPage);
-  const visibleCourses = courses.slice(
-    page * perPage,
-    page * perPage + perPage
-  );
+  const visibleCourses = courses.slice(page * perPage, page * perPage + perPage);
+  const averageProgress =
+    courses.length > 0
+      ? Math.round(courses.reduce((sum, course) => sum + course.progress, 0) / courses.length)
+      : 0;
 
   return (
-    <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-      
-      {/* ─── HEADER (Same as GradeCard) ───────────────────────── */}
-      <div className="flex items-center justify-between border-b border-border/60 bg-muted/20 px-6 py-4">
-        
-        {/* LEFT */}
-        <div className="space-y-1">
-          <p className="text-lg font-semibold leading-none tracking-tight sm:text-xl">
+    <Card className="overflow-hidden border-border/60 bg-card/80 py-0 shadow-sm">
+      <div className="flex items-center justify-between border-b border-border/60 bg-muted/20 px-5 py-3.5">
+        <div className="space-y-0.5">
+          <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
             Course Progress
           </p>
-          <p className="text-sm leading-6 text-muted-foreground">
-            Your enrolled courses
-          </p>
+          <p className="text-xs text-muted-foreground">Your enrolled courses</p>
         </div>
 
-        {/* RIGHT */}
         <div className="flex items-center gap-2">
+          <span className="rounded-full border border-border/60 bg-background/80 px-2.5 py-1 text-[11px] text-muted-foreground">
+            Avg {averageProgress}%
+          </span>
           <span className="text-xs text-muted-foreground">
             {page + 1} / {totalPages || 1}
           </span>
-
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex h-7 w-7 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+            aria-label="Previous page"
           >
-            <ChevronLeft className="size-4" />
+            <ChevronLeft className="size-3.5" />
           </button>
-
           <button
-            onClick={() =>
-              setPage((p) => Math.min(totalPages - 1, p + 1))
-            }
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page === totalPages - 1}
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex h-7 w-7 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
+            aria-label="Next page"
           >
-            <ChevronRight className="size-4" />
+            <ChevronRight className="size-3.5" />
           </button>
         </div>
       </div>
 
-      {/* ─── CONTENT ─────────────────────────────────────────── */}
-      <CardContent className="p-5">
+      <CardContent className="space-y-3 p-4">
         {courses.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No courses available
-          </p>
+          <p className="text-sm text-muted-foreground">No courses available</p>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {visibleCourses.map((course) => (
-              <CourseCard key={course.slug} course={course} />
-            ))}
-          </div>
+          visibleCourses.map((course) => (
+            <CourseCard key={course.slug} course={course} layout="list" />
+          ))
         )}
       </CardContent>
     </Card>

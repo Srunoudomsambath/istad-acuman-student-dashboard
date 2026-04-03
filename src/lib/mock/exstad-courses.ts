@@ -21,7 +21,7 @@ export const exstadLearningDetails: LearningDetail[] = [
     progress: 73,
     level: "Scholarship",
     track: "Full Stack",
-    roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    roster: ["\u1785\u17C5 \u1794\u17BC\u179A\u17C9\u17B6 Chao Bora", "\u179F\u17BB\u1781 \u178A\u17B6\u179A\u17C9\u17B6 Sok Dara", "\u1785\u17B6\u1793\u17CB \u179A\u17C9\u17B6\u179C\u17B8 Chan Ravy", "\u179B\u17B9\u1798 \u179F\u17B8\u17A0\u17B6 Lim Seyha"],
     status: "active",
     curriculum: [
       {

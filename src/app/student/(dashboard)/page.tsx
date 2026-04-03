@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   Award,
@@ -9,21 +9,17 @@ import {
 import Image from "next/image";
 
 import { CourseProgressCard } from "@/components/dashboard/CourseProgressCard";
-import { NotificationList } from "@/components/dashboard/notification-list";
 import { StatCard } from "@/components/dashboard/stat-card";
+import { GradeCard } from "@/components/student/grade-summary";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { studentCourses } from "@/lib/mock/courses";
 import {
   studentAchievements,
   studentCertificates,
   studentProfile,
 } from "@/lib/mock/student";
-import { studentNotifications } from "@/lib/mock/notifications";
 import { formatPhnomPenhDate, getPhnomPenhDate } from "@/lib/phnom-penh-date";
-import { GradeCard } from "@/components/student/grade-summary";
-
-
 
 export default function StudentDashboardPage() {
   const today = getPhnomPenhDate();
@@ -54,8 +50,6 @@ export default function StudentDashboardPage() {
     },
   ];
 
-
-
   return (
     <div className="space-y-4">
       <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
@@ -67,7 +61,7 @@ export default function StudentDashboardPage() {
                   <span className="font-medium text-foreground">
                     {formatPhnomPenhDate(today, { weekday: "long" })}
                   </span>
-                  <span className="mx-1.5">·</span>
+                  <span className="mx-1.5">&middot;</span>
                   {formatPhnomPenhDate(today, {
                     day: "2-digit",
                     month: "short",
@@ -91,8 +85,9 @@ export default function StudentDashboardPage() {
                 </p>
                 <h2 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl lg:text-4xl">
                   {studentProfile.englishName}
-                  <span className="text-muted-foreground">
-                    {" "}- {studentProfile.khmerName}
+                  <span className="text-muted-foreground"> - </span>
+                  <span style={{ fontFamily: "var(--font-koh)" }}>
+                    {studentProfile.khmerName}
                   </span>
                 </h2>
                 <p className="max-w-xl text-sm leading-6 text-muted-foreground">
@@ -126,11 +121,9 @@ export default function StudentDashboardPage() {
       </Card>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <CourseProgressCard courses={studentCourses} perPage={2} />
-        {/* <NotificationList notifications={studentNotifications} /> */}
-        <GradeCard/>
+        <CourseProgressCard courses={studentCourses} perPage={4} />
+        <GradeCard />
       </div>
-      
     </div>
   );
 }

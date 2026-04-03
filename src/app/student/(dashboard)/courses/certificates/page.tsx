@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Eye, ScrollText } from "lucide-react";
+import { Eye } from "lucide-react";
 
+import { BachelorSectionHeader } from "@/components/student/BachelorSectionHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -14,63 +15,27 @@ import {
 } from "@/components/ui/table";
 import { studentCertificates } from "@/lib/mock/certificates";
 
-export default function CertificatesPage() {
-  const totalCertificates = studentCertificates.length;
-
+export default function BachelorCertificatesPage() {
   return (
     <div className="space-y-6">
-      {/* HEADER */}
-      <div className="space-y-2">
-        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <Badge
-            variant="secondary"
-            className="rounded-full px-3 py-1 text-[11px] font-semibold"
-          >
-            My Certificates
-          </Badge>
-          <span>View your issued certificates in one place.</span>
-        </div>
+      <BachelorSectionHeader
+        title="Bachelor Certificates"
+        description="Review certificates issued under your bachelor program in one compact table."
+      />
 
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-            Certificates
-          </h1>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-            A clean, compact list of your official certificates with the essential details.
-          </p>
-        </div>
-      </div>
-
-      {/* CARD */}
-      <Card className="overflow-hidden border-border/60 bg-card/90 shadow-sm p-0">
-        {/* TABLE */}
+      <Card className="overflow-hidden border-border/60 bg-card/90 p-0 shadow-sm">
         <CardContent className="p-0">
           <Table>
-            {/* TABLE HEADER */}
             <TableHeader>
               <TableRow className="bg-muted/20 hover:bg-muted/20">
-                <TableHead className="w-12 pl-6 font-medium text-muted-foreground">
-                  #
-                </TableHead>
-                <TableHead className="font-medium text-muted-foreground">
-                  Certificate
-                </TableHead>
-                <TableHead className="font-medium text-muted-foreground">
-                  Type
-                </TableHead>
-                <TableHead className="font-medium text-muted-foreground">
-                  Issue Date
-                </TableHead>
-                <TableHead className="font-medium text-muted-foreground">
-                  Issued By
-                </TableHead>
-                <TableHead className="pr-6 text-right font-medium text-muted-foreground">
-                  Action
-                </TableHead>
+                <TableHead className="w-12 pl-6 font-medium text-muted-foreground">#</TableHead>
+                <TableHead className="font-medium text-muted-foreground">Certificate</TableHead>
+                <TableHead className="font-medium text-muted-foreground">Type</TableHead>
+                <TableHead className="font-medium text-muted-foreground">Issue Date</TableHead>
+                <TableHead className="font-medium text-muted-foreground">Issued By</TableHead>
+                <TableHead className="pr-6 text-right font-medium text-muted-foreground">Action</TableHead>
               </TableRow>
             </TableHeader>
-
-            {/* TABLE BODY */}
             <TableBody>
               {studentCertificates.map((certificate, index) => (
                 <TableRow
@@ -80,7 +45,6 @@ export default function CertificatesPage() {
                   <TableCell className="pl-6 font-medium text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </TableCell>
-
                   <TableCell className="py-3.5 pr-2 font-medium text-foreground">
                     <div className="space-y-0.5">
                       <p className="leading-5">{certificate.title}</p>
@@ -89,7 +53,6 @@ export default function CertificatesPage() {
                       </p>
                     </div>
                   </TableCell>
-
                   <TableCell className="py-3.5">
                     <Badge
                       variant="secondary"
@@ -98,15 +61,12 @@ export default function CertificatesPage() {
                       {certificate.certificateType}
                     </Badge>
                   </TableCell>
-
                   <TableCell className="py-3.5 text-sm text-muted-foreground">
                     {certificate.issuedAt}
                   </TableCell>
-
                   <TableCell className="py-3.5 text-sm text-muted-foreground">
-                    {certificate.createdBy ?? certificate.platformName}
+                    {certificate.createdBy}
                   </TableCell>
-
                   <TableCell className="pr-6 text-right">
                     <Button
                       asChild
@@ -124,20 +84,6 @@ export default function CertificatesPage() {
               ))}
             </TableBody>
           </Table>
-
-          {/* FOOTER */}
-          <div className="flex flex-col gap-1 border-t border-border/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-muted-foreground">
-              Showing{" "}
-              <span className="font-medium text-foreground">
-                {totalCertificates}
-              </span>{" "}
-              record{totalCertificates !== 1 ? "s" : ""}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              All certificates are official and ready to view
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
