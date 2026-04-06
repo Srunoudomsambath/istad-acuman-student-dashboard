@@ -1,4 +1,4 @@
-﻿import { GraduationCap } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 
 import {
   Accordion,
@@ -54,15 +54,6 @@ export function HighDegreeTrackingSection({ program }: { program: HighDegreeProg
         </span>
       </div>
 
-      <div className="flex items-center justify-between border-b border-border/60 bg-muted/10 px-5 py-3">
-        <div>
-          <p className="mb-0.5 text-[11px] text-muted-foreground">Program</p>
-          <p className="text-[13px] font-medium">{program.programTitle}</p>
-        </div>
-        <span className="rounded border border-border/60 px-1.5 py-0.5 text-[11px] text-muted-foreground">
-          {program.programType}
-        </span>
-      </div>
 
       <div className="space-y-2 p-3.5">
         <Accordion type="single" collapsible className="space-y-2">

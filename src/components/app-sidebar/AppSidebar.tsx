@@ -98,6 +98,7 @@ const PROGRAM_SECTIONS = new Set([
   "achievements",
   "participants",
   "payments",
+  "transcript",
 ]);
 
 const bachelorSidebarItems: ProgramSidebarItem[] = [
@@ -131,6 +132,11 @@ const bachelorSidebarItems: ProgramSidebarItem[] = [
     url: "/student/courses/payments",
     icon: CreditCard,
   },
+  {
+    title: "Transcript",
+    url: "/student/courses/transcript",
+    icon: FileBadge2,
+  },
 ];
 
 const scholarshipSidebarItems = (slug: string): ProgramSidebarItem[] => [
@@ -138,6 +144,11 @@ const scholarshipSidebarItems = (slug: string): ProgramSidebarItem[] => [
     title: "Overview",
     url: `/student/scholarships/${slug}`,
     icon: BookOpen,
+  },
+  {
+    title: "Information",
+    url: `/student/scholarships/${slug}/information`,
+    icon: FolderOpen,
   },
   {
     title: "Certificates",
@@ -158,6 +169,11 @@ const scholarshipSidebarItems = (slug: string): ProgramSidebarItem[] => [
     title: "Payments",
     url: `/student/scholarships/${slug}/payments`,
     icon: CreditCard,
+  },
+  {
+    title: "Transcript",
+    url: `/student/scholarships/${slug}/transcript`,
+    icon: FileBadge2,
   },
 ];
 
@@ -760,6 +776,10 @@ export default function AppSidebar({
     </Sidebar>
   );
 }
+
+
+
+
 
 
 

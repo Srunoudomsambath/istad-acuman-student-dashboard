@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Eye, ScrollText } from "lucide-react";
+import { Eye } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -19,7 +19,6 @@ export default function CertificatesPage() {
 
   return (
     <div className="space-y-6">
-      {/* HEADER */}
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <Badge
@@ -41,18 +40,12 @@ export default function CertificatesPage() {
         </div>
       </div>
 
-      {/* CARD */}
-      <Card className="overflow-hidden border-border/60 bg-card/90 shadow-sm p-0">
-        {/* TABLE */}
+      <Card className="overflow-hidden border-border/60 bg-card/90 p-0 shadow-sm">
         <CardContent className="p-0">
           <Table>
-            {/* TABLE HEADER */}
             <TableHeader>
               <TableRow className="bg-muted/20 hover:bg-muted/20">
-                <TableHead className="w-12 pl-6 font-medium text-muted-foreground">
-                  #
-                </TableHead>
-                <TableHead className="font-medium text-muted-foreground">
+                <TableHead className="pl-6 font-medium text-muted-foreground">
                   Certificate
                 </TableHead>
                 <TableHead className="font-medium text-muted-foreground">
@@ -70,18 +63,13 @@ export default function CertificatesPage() {
               </TableRow>
             </TableHeader>
 
-            {/* TABLE BODY */}
             <TableBody>
               {studentCertificates.map((certificate, index) => (
                 <TableRow
                   key={certificate.uuid}
                   className="group border-border/50 transition-colors hover:bg-muted/35"
                 >
-                  <TableCell className="pl-6 font-medium text-muted-foreground">
-                    {String(index + 1).padStart(2, "0")}
-                  </TableCell>
-
-                  <TableCell className="py-3.5 pr-2 font-medium text-foreground">
+                  <TableCell className="py-3.5 pl-6 pr-2 font-medium text-foreground">
                     <div className="space-y-0.5">
                       <p className="leading-5">{certificate.title}</p>
                       <p className="text-[11px] text-muted-foreground">
@@ -125,7 +113,6 @@ export default function CertificatesPage() {
             </TableBody>
           </Table>
 
-          {/* FOOTER */}
           <div className="flex flex-col gap-1 border-t border-border/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-muted-foreground">
               Showing{" "}

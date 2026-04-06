@@ -27,6 +27,7 @@ function mapDegreeCourseToLearningDetail(
     track: course.track,
     roster: course.roster,
     status: course.status,
+    assessment: course.assessment,
     curriculum: course.curriculum,
   };
 }

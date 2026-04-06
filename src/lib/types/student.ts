@@ -109,6 +109,11 @@ export type Scholar = {
   phone: string;
   personalNumber: string;
   familyNumber: string;
+  nickname?: string;
+  telegram?: string;
+  facebook?: string;
+  github?: string;
+  website?: string;
   guardianRelationship: string;
   placeOfBirth: string;
   currentAddress: string;
@@ -117,9 +122,12 @@ export type Scholar = {
   updatedBy: string;
   updatedAt: string;
   status: ScholarStatus;
+  background: string;
   bio: string;
   quote: string;
   avatar: string;
+  coverImage?: string;
+  coverPosition?: number;
   isPublic: boolean;
   isAbroad: boolean;
   isEmployed: boolean;

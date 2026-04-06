@@ -1,4 +1,4 @@
-﻿import { CalendarDays, Download, ReceiptText } from "lucide-react";
+import { CalendarDays, Download, ReceiptText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +16,7 @@ import { formatCurrency } from "@/components/student/payments/utils";
 export function RecentHistorySection({ items }: { items: PaymentHistoryItem[] }) {
   return (
     <Card className="border-border/60 bg-card/95 shadow-sm">
-      <CardHeader className="border-b bg-muted/10 px-4 py-2.5">
+      <CardHeader className="border-b bg-muted/10 px-4 pt-4 pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold">
           <ReceiptText className="size-4 text-primary" />
           Recent History

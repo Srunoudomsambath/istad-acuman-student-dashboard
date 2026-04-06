@@ -20,6 +20,17 @@ export type LearningCurriculumItem = {
   href?: string;
 };
 
+export type LearningAssessmentBreakdown = {
+  midtermExamScore: number;
+  finalExamScore: number;
+  attendanceScore: number;
+  assignmentScore: number;
+  miniProjectScore: number;
+  activityScore: number;
+  grade: string;
+  total: number;
+};
+
 export type LearningDetail = {
   source: LearningSource;
   type: LearningType;
@@ -41,5 +52,6 @@ export type LearningDetail = {
   track: string;
   roster: string[];
   status?: string;
+  assessment?: LearningAssessmentBreakdown;
   curriculum: LearningCurriculumItem[];
 };

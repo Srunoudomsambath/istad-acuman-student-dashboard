@@ -5,6 +5,17 @@ export type CourseCurriculumItem = {
   description: string;
 };
 
+export type CourseAssessmentBreakdown = {
+  midtermExamScore: number;
+  finalExamScore: number;
+  attendanceScore: number;
+  assignmentScore: number;
+  miniProjectScore: number;
+  activityScore: number;
+  grade: string;
+  total: number;
+};
+
 export type StudentCourse = {
   slug: string;
   code: string;

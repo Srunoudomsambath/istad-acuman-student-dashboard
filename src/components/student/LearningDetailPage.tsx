@@ -4,8 +4,6 @@ import {
   ArrowLeft,
   Award,
   BookOpen,
-  Briefcase,
-  Building2,
   CalendarDays,
   ChevronRight,
   FileText,
@@ -18,7 +16,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { LearningCurriculumItem, LearningDetail } from "@/lib/types/learning";
 
@@ -85,7 +82,7 @@ function CurriculumItemCard({
             {curriculumTypeMeta[type].label}
           </Badge>
         </div>
-        <p className="text-sm leading-6 text-muted-foreground">{description}</p>
+        <p className="text-sm leading-5 text-muted-foreground">{description}</p>
         {href ? (
           <Button asChild variant="outline" size="sm" className="mt-2 h-8 rounded-full px-3 text-xs">
             <Link href={href} target="_blank" rel="noreferrer">
@@ -115,18 +112,18 @@ export function LearningDetailPage({
       ? [...detail.curriculum, fallbackScholarshipFile]
       : detail.curriculum;
   const totalCurriculum = curriculumItems.length;
-  const statCards = [
-    { icon: <CalendarDays className="size-3.5" />, label: "Duration", value: "6 months" },
-    { icon: <Award className="size-3.5" />, label: "Scholarship", value: "50%" },
-  ];
-
-  if (detail.type !== "scholarship") {
-    statCards.unshift(
-      { icon: <GraduationCap className="size-3.5" />, label: "Theory", value: detail.theoryLabel },
-      { icon: <Award className="size-3.5" />, label: "Credits", value: detail.creditLabel }
-    );
-  }
-
+  const statCards =
+    detail.type === "scholarship"
+      ? [
+          { icon: <CalendarDays className="size-3.5" />, label: "Duration", value: "6 months" },
+          { icon: <Award className="size-3.5" />, label: "Scholarship", value: "50%" },
+        ]
+      : [
+          { icon: <Award className="size-3.5" />, label: "Credits", value: detail.creditLabel },
+          { icon: <GraduationCap className="size-3.5" />, label: "Theory", value: detail.theoryLabel },
+          { icon: <Layers3 className="size-3.5" />, label: "Practice", value: detail.practiceLabel },
+          { icon: <BookOpen className="size-3.5" />, label: "Internship", value: detail.internshipLabel },
+        ];
   const curriculumByType = curriculumItems.reduce<Record<string, LearningCurriculumItem[]>>(
     (accumulator, item) => {
       accumulator[item.type] ??= [];
@@ -141,6 +138,17 @@ export function LearningDetailPage({
       Lecture: [],
     }
   );
+
+  const assessmentItems = detail.assessment
+    ? [
+        { label: "Midterm", value: detail.assessment.midtermExamScore },
+        { label: "Final", value: detail.assessment.finalExamScore },
+        { label: "Attendance", value: detail.assessment.attendanceScore },
+        { label: "Assignment", value: detail.assessment.assignmentScore },
+        { label: "Mini Project", value: detail.assessment.miniProjectScore },
+        { label: "Activity", value: detail.assessment.activityScore },
+      ]
+    : [];
 
   return (
     <div className="space-y-5">
@@ -199,18 +207,55 @@ export function LearningDetailPage({
                   </div>
                 ))}
               </div>
-
-              <div className="rounded-lg border border-border bg-muted/20 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Semester Progress</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">Keep momentum and finish the remaining work strong.</p>
+              {detail.type === "scholarship" ? (
+                <div className="rounded-lg border border-border bg-muted/20 p-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Semester Progress</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">Keep momentum and finish the remaining work strong.</p>
+                    </div>
+                    <span className="text-2xl font-bold tabular-nums text-foreground">{completionPercent}%</span>
                   </div>
-                  <span className="text-2xl font-bold tabular-nums text-foreground">{completionPercent}%</span>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${completionPercent}%` }} />
+                  </div>
+                  <p className="mt-2 text-right text-xs font-medium text-muted-foreground">{progressLabel}</p>
                 </div>
-                <Progress value={completionPercent} className="h-1.5" />
-                <p className="mt-2 text-right text-xs font-medium text-muted-foreground">{progressLabel}</p>
-              </div>
+              ) : null}
+
+              {detail.assessment ? (
+                <div className="space-y-4 pt-1">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                        Assessment Breakdown
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Subject-level scoring across exams, participation, and project work.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="secondary" className="rounded-full px-3 py-1">
+                        Grade {detail.assessment.grade}
+                      </Badge>
+                      <Badge variant="outline" className="rounded-full px-3 py-1">
+                        Total {detail.assessment.total.toFixed(1)}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-x-4 gap-y-3 border-t border-border/70 pt-4 sm:grid-cols-2 xl:grid-cols-3">
+                    {assessmentItems.map((item) => (
+                      <div key={item.label} className="flex items-center justify-between gap-3">
+                        <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                          {item.label}
+                        </p>
+                        <p className="text-sm font-semibold text-foreground">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <div className="flex flex-col divide-y divide-border">
@@ -262,13 +307,12 @@ export function LearningDetailPage({
         </div>
       </section>
 
-      <div className="grid gap-3">
-        <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-          <CardHeader className="border-b border-border/60 bg-muted/20">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+      <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
+          <CardHeader className="border-b border-border/60 bg-muted/20 px-5 py-4">
+            <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <CardTitle className="text-xl">Curriculum map</CardTitle>
-                <p className="text-sm leading-6 text-muted-foreground">
+                <CardTitle className="text-lg font-semibold">Curriculum map</CardTitle>
+                <p className="text-sm leading-5 text-muted-foreground">
                   Browse lesson types by tab, then drill into each item in the list below.
                 </p>
               </div>
@@ -277,9 +321,9 @@ export function LearningDetailPage({
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="p-5">
+          <CardContent className="p-4">
             <Tabs defaultValue="File" className="w-full">
-              <TabsList className="mb-4 grid w-full grid-cols-2 gap-2 sm:grid-cols-5">
+              <TabsList className="mb-3 grid w-full grid-cols-2 gap-2 sm:grid-cols-5">
                 {Object.entries(curriculumTypeMeta).map(([key, meta]) => (
                   <TabsTrigger key={key} value={key} className="gap-2">
                     <meta.icon className="size-4" />
@@ -305,7 +349,7 @@ export function LearningDetailPage({
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-2xl border border-dashed border-border/70 bg-background/60 p-6 text-sm text-muted-foreground">
+                      <div className="rounded-2xl border border-dashed border-border/70 bg-background/60 px-5 py-4 text-sm text-muted-foreground">
                         No {meta.label.toLowerCase()} available yet.
                       </div>
                     )}
@@ -316,6 +360,5 @@ export function LearningDetailPage({
           </CardContent>
         </Card>
       </div>
-    </div>
   );
 }

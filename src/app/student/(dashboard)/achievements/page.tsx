@@ -50,12 +50,12 @@ function ProjectCard({
 
   return (
     <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <CardContent className="space-y-5 p-5">
+      <CardContent className="space-y-4 p-6">
         <div
-          className={`relative aspect-[16/10] overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br ${toneForProgram(project.program)}`}
+          className={`relative aspect-[16/10] overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br ${toneForProgram(project.program)}`}
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.35),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.12),transparent_35%)]" />
-          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+          <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
             <Badge
               variant="secondary"
               className="rounded-full px-3 py-1 text-[11px] font-semibold"
@@ -69,23 +69,23 @@ function ProjectCard({
               {project.achievementType}
             </Badge>
           </div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
             <span className="text-[11px] uppercase tracking-[0.35em] text-foreground/60">
               Project Image
             </span>
-            <div className="mt-4 flex size-20 items-center justify-center rounded-3xl border border-white/40 bg-white/30 text-2xl font-bold text-foreground shadow-sm backdrop-blur-sm">
+            <div className="mt-3 flex size-16 items-center justify-center rounded-2xl border border-white/40 bg-white/30 text-xl font-bold text-foreground shadow-sm backdrop-blur-sm">
               {project.icon}
             </div>
-            <p className="mt-4 text-2xl font-semibold tracking-tight text-foreground">
+            <p className="mt-3 text-xl font-semibold tracking-tight text-foreground">
               {project.title}
             </p>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-2.5">
+          <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="space-y-1">
-              <h3 className="text-xl font-semibold tracking-tight text-foreground">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
                 {project.title}
               </h3>
               <p className="text-sm text-muted-foreground">{project.program}</p>
@@ -95,22 +95,22 @@ function ProjectCard({
             </Badge>
           </div>
 
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-sm leading-5 text-muted-foreground">
             {project.description}
           </p>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {project.highlights.map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-[11px] font-medium text-foreground"
+                className="rounded-full border border-border/60 bg-background/70 px-2.5 py-0.5 text-[11px] font-medium text-foreground"
               >
                 {item}
               </span>
             ))}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 pt-1">
+          <div className="flex flex-wrap items-center gap-2 pt-0.5">
             {isLink ? (
               <Button asChild size="sm" className="gap-2">
                 <Link href={project.link}>

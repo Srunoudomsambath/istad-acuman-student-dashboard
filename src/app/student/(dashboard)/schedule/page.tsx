@@ -182,7 +182,7 @@ function StatCard({
 }) {
   return (
     <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-      <CardContent className="space-y-3 p-5">
+      <CardContent className="space-y-3 p-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <Icon className="size-4" />
@@ -234,7 +234,7 @@ function DaySummary({
         <div className="flex items-center justify-between gap-3">
           <div>
             <CardTitle className="text-lg sm:text-xl">{label}</CardTitle>
-            <p className="text-sm leading-6 text-muted-foreground">
+            <p className="text-sm leading-5 text-muted-foreground">
               {items.length} item{items.length === 1 ? "" : "s"} on this day
             </p>
           </div>
@@ -243,10 +243,10 @@ function DaySummary({
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3 p-5">
+      <CardContent className="space-y-3 p-4">
         {items.length > 0 ? (
           items.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-border/60 bg-background/70 p-4">
+            <div key={item.id} className="rounded-2xl border border-border/60 bg-background/70 p-3.5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -269,7 +269,7 @@ function DaySummary({
             </div>
           ))
         ) : (
-          <div className="rounded-2xl border border-dashed border-border/60 bg-background/60 p-6 text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-border/60 bg-background/60 px-5 py-4 text-sm text-muted-foreground">
             {emptyLabel}
           </div>
         )}
@@ -569,13 +569,13 @@ export default function SchedulePage() {
       </Card>
 
     <div className="grid gap-3 xl:grid-cols-[1fr_340px]">
-  {/* ── Upcoming track dates (now in the wide column) ── */}
+  {/* â”€â”€ Upcoming track dates (now in the wide column) â”€â”€ */}
   <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-    <CardHeader className="border-b border-border/60 from-background via-muted/20 to-background">
+    <CardHeader className="border-b border-border/60 from-background via-muted/20 to-background px-5 py-4">
       <div className="flex items-center justify-between gap-3">
         <div>
           <CardTitle className="text-lg sm:text-xl">Upcoming track dates</CardTitle>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-sm leading-5 text-muted-foreground">
             Sorted by date and filtered to the current scope.
           </p>
         </div>
@@ -589,7 +589,7 @@ export default function SchedulePage() {
         </div>
       </div>
     </CardHeader>
-    <CardContent className="space-y-3 p-5">
+    <CardContent className="space-y-3 p-4">
       <div className="grid gap-2 sm:grid-cols-3">
         <div className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2">
           <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Course</p>
@@ -606,7 +606,7 @@ export default function SchedulePage() {
       </div>
       {monthItems.length > 0 ? (
         monthItems.map((item) => (
-          <div key={item.id} className="rounded-2xl border border-border/60 bg-background/70 p-4">
+          <div key={item.id} className="rounded-2xl border border-border/60 bg-background/70 p-3.5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -629,20 +629,20 @@ export default function SchedulePage() {
           </div>
         ))
       ) : (
-        <div className="rounded-2xl border border-dashed border-border/60 bg-background/60 p-6 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-border/60 bg-background/60 px-5 py-4 text-sm text-muted-foreground">
           Nothing matches your current filters.
         </div>
       )}
     </CardContent>
   </Card>
 
-  {/* ── Selected day (now in the narrow 340px column) ── */}
+  {/* â”€â”€ Selected day (now in the narrow 340px column) â”€â”€ */}
   <Card className="overflow-hidden border-border/60 bg-card/80 shadow-sm">
-    <CardHeader className="border-b border-border/60 from-background via-muted/20 to-background">
+    <CardHeader className="border-b border-border/60 from-background via-muted/20 to-background px-5 py-4">
       <div className="flex items-center justify-between gap-3">
         <div>
           <CardTitle className="text-lg sm:text-xl">Selected day</CardTitle>
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-sm leading-5 text-muted-foreground">
             Click any day in the calendar to inspect its events.
           </p>
         </div>
@@ -651,7 +651,7 @@ export default function SchedulePage() {
         </Badge>
       </div>
     </CardHeader>
-    <CardContent className="space-y-3 p-5">
+    <CardContent className="space-y-3 p-4">
       <div className="grid gap-2 sm:grid-cols-3">
         <div className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2">
           <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Events</p>
@@ -672,7 +672,7 @@ export default function SchedulePage() {
       </div>
       {selectedItems.length > 0 ? (
         selectedItems.map((item) => (
-          <div key={item.id} className="rounded-2xl border border-border/60 bg-background/70 p-4">
+          <div key={item.id} className="rounded-2xl border border-border/60 bg-background/70 p-3.5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -695,7 +695,7 @@ export default function SchedulePage() {
           </div>
         ))
       ) : (
-        <div className="rounded-2xl border border-dashed border-border/60 bg-background/60 p-6 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-border/60 bg-background/60 px-5 py-4 text-sm text-muted-foreground">
           No events found for the selected day and filter.
         </div>
       )}

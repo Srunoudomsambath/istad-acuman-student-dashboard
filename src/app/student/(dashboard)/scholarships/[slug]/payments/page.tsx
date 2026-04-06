@@ -1,4 +1,3 @@
-import { BachelorSectionHeader } from "@/components/student/BachelorSectionHeader";
 import {
   formatCurrency,
   formatDate,
@@ -48,10 +47,14 @@ export default function ScholarshipPaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <BachelorSectionHeader
-        title="Scholarship Payments"
-        description="Track the scholarship fee plan, review due dates, and monitor your payment status."
-      />
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          Payments
+        </h1>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+          Track the scholarship fee plan, review due dates, and monitor your payment status.
+        </p>
+      </div>
 
       <PaymentOverviewSection
         {...overview}

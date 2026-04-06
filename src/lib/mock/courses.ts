@@ -1,5 +1,11 @@
 import type { StudentCourse } from "@/lib/types/course";
 
+const srunOudomsambath =
+  "\u179F\u17D2\u179A\u17BB\u1793 \u17A7\u178F\u17D2\u178F\u1798\u179F\u1798\u17D2\u1794\u178F\u17D2\u178F\u17B7 Srun Oudomsambath";
+const sokSokha = "\u179F\u17BB\u1780 \u179F\u17BB\u1781\u17B6 Sok Sokha";
+const chanDara = "\u1785\u17B6\u1793 \u178A\u17B6\u179A\u17C9\u17B6 Chan Dara";
+const limSreypov = "\u179B\u17B9\u1798 \u179F\u17D2\u179A\u17B8\u1796\u17C5 Lim Sreypov";
+
 export const studentCourses: StudentCourse[] = [
   {
     slug: "web-development",
@@ -22,8 +28,18 @@ export const studentCourses: StudentCourse[] = [
     track: "Degree",
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Build responsive interfaces and complete a polished mini project.",
-    roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    roster: [srunOudomsambath, sokSokha, chanDara, limSreypov],
     status: "active",
+    assessment: {
+      midtermExamScore: 78,
+      finalExamScore: 82,
+      attendanceScore: 88,
+      assignmentScore: 80,
+      miniProjectScore: 83,
+      activityScore: 85,
+      grade: "B+",
+      total: 82.7,
+    },
     curriculum: [
       {
         uuid: "wd-slide",
@@ -72,7 +88,7 @@ export const studentCourses: StudentCourse[] = [
     track: "Degree",
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Model data with confidence and write maintainable SQL queries.",
-    roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    roster: [srunOudomsambath, sokSokha, chanDara, limSreypov],
     status: "active",
     curriculum: [
       {
@@ -122,7 +138,7 @@ export const studentCourses: StudentCourse[] = [
     track: "Degree",
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Prepare for production UI workflows with reusable components.",
-    roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    roster: [srunOudomsambath, sokSokha, chanDara, limSreypov],
     status: "active",
     curriculum: [
       {
@@ -172,7 +188,7 @@ export const studentCourses: StudentCourse[] = [
     track: "Degree",
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Prepare for production UI workflows with reusable components.",
-    roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    roster: [srunOudomsambath, sokSokha, chanDara, limSreypov],
     status: "active",
     curriculum: [
       {
@@ -222,7 +238,7 @@ export const studentCourses: StudentCourse[] = [
     track: "Degree",
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Spring_Boot.svg/960px-Spring_Boot.svg.png",
     summary: "Prepare for production UI workflows with reusable components.",
-    roster: ["Student 1", "Student 2", "Student 3", "Student 4"],
+    roster: [srunOudomsambath, sokSokha, chanDara, limSreypov],
     status: "active",
     curriculum: [
       {

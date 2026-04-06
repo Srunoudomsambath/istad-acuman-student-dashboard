@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, PlayCircle } from "lucide-react";
 
-import { BachelorSectionHeader } from "@/components/student/BachelorSectionHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,10 +17,14 @@ function toneForProgram(program: string) {
 export default function ScholarshipAchievementsPage() {
   return (
     <div className="space-y-6">
-      <BachelorSectionHeader
-        title="Scholarship Achievements"
-        description="See the projects and milestones completed inside your scholarship track."
-      />
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          Achievements
+        </h1>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+          See the projects and milestones completed inside your scholarship track.
+        </p>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         {studentProjectAchievements.map((achievement) => (

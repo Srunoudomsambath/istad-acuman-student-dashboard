@@ -202,14 +202,14 @@ export function GradeCard({
         </div>
       </CardContent>
 
-      <CardFooter className="block border-t border-border/60 px-5 py-3.5">
+      <CardFooter className="block border-t border-border/60 px-5 pt-3 pb-2.5">
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground">Semester GPA</span>
           <span className="text-sm font-semibold text-foreground">
             {loading ? "-" : `${semester.gpa.toFixed(2)} / ${semester.maxGpa.toFixed(2)}`}
           </span>
         </div>
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
           <div
             className="h-full rounded-full bg-foreground/80 transition-all duration-500"
             style={{ width: loading ? "0%" : `${gpaPercent}%` }}
