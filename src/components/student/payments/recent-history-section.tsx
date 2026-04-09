@@ -20,7 +20,7 @@ export function RecentHistorySection({ items }: { items: PaymentHistoryItem[] })
         <CardTitle className="flex items-center gap-2 text-sm font-semibold">
           <ReceiptText className="size-4 text-primary" />
           Recent History
-        </CardTitle>
+        </CardTitle> 
       </CardHeader>
       <CardContent className="p-4">
         <div className="rounded-lg border border-border/60 bg-background/90">
